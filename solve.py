@@ -9,17 +9,32 @@ import sys
 class Solver:
 
 	def __init__(self, argv):
-		print argv
-		print type(argv)
+		#power
+		#coefficient
+		self.guess = int()
+		self.o = []
+		self.args = argv
+		#print argv
+		#print type(argv)
 		# User enters four arguments
-		argtotal = len(sys.argv)-1 # should be 4
-		argcounter = argtotal / 2
-		#dict = {}
-		#for arg in argv:
-			#print arg
-			#dict[arg[i]] = dict[arg[i+1]]
-			#i+2
-		#print dict
+		#argtotal = len(sys.argv)-1 # should be 4
+		#argcounter = argtotal / 2
+		#print argtotal, argcounter
+	
+	def power_rule(self):
+		x = 1
+		i = 2*x
+		j = 1
+		for arg in self.args:
+			#self.o = sys.argv[j]*sys.argv[i]
+			x = x + 1
+			j = i + 1
+			print "value of x is ",  x
+			print "value of i is ", i           #I ISNT RIGHT
+			print "value of j is ",  j
+solverObject = Solver(sys.argv[1:])
+solverObject.power_rule()
+		#print self.o
 		#print guess
 	#def power_rule(self, coeffs, powers):
 	#def derivative(self, equation):
