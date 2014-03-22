@@ -9,40 +9,71 @@ import sys
 class Solver:
 
 	def __init__(self, argv):
-		#power
-		#coefficient
 		self.guess = int()
 		self.o = []
 		self.args = argv
-		#print argv
-		#print type(argv)
-		# User enters four arguments
-		#argtotal = len(sys.argv)-1 # should be 4
-		#argcounter = argtotal / 2
-		#print argtotal, argcounter
+		print self.args
 	
-	def power_rule(self):
+	def coeff_power_placement(self):
+		numbers = []
+		c = 1
 		x = 1
-		i = 2*x
-		j = 1
-		for arg in self.args:
-			#self.o = sys.argv[j]*sys.argv[i]
-			x = x + 1
-			j = i + 1
-			print "value of x is ",  x
-			print "value of i is ", i           #I ISNT RIGHT
-			print "value of j is ",  j
-solverObject = Solver(sys.argv[1:])
-solverObject.power_rule()
-		#print self.o
-		#print guess
-	#def power_rule(self, coeffs, powers):
-	#def derivative(self, equation):
+		#subtract 0th argument
+		argtotal = len(sys.argv)-1
+		#User enters even number of arguments
+		#argcounter is also the number of iterations needed for correct coeffcient/power placement
+		final_iteration = argtotal/2
+		initial_iteration = 0
+		#print argtotal, argcounter
+		
+		print "initial coef place is", c
+		print
+		while final_iteration > initial_iteration:
+			for arg in self.args:
+				#x = x + 1  #Reassign x
+				#power
+				p = 2*x
+				#coefficient
+				x = x + 1
+				initial_iteration = initial_iteration + 1
+				print "power place is ", p
+				print "x is", x
+				print "iteration = ", initial_iteration
+				c = p + 1
+				#if the coeff place is > the total arguments break the for loop, occurs when final_iteration = initial_iteration, so the while loop is also broken
+				if c > argtotal:
+					break
+				print "coeff place is ", c
 
+				#Debugging				
+				print
+				
+				break
+				
+				#FIX: Doesn't print out an extra coeffcient place, but the assignment is still taking place on line 42, line 44 prevents the printing of it though. Will this be a problem later on?    Return may help fix this?
+
+		#MAYBE USE THIS?
+
+		n = 0
+		for args in self.args:
+			numbers.append(self.args[n])
+			n = n + 1
+		print numbers
+			
+			
+solverObject = Solver(sys.argv[1:])
+solverObject.coeff_power_placement()
+	
+	
+	#print guess
+	
+	#self.o = sys.argv[c]*sys.argv[p]
+	
+		
+	#def power_rule(self, coeffs, powers):
 
 	#def Newtons_method(self, equation, guess):
-
-solverObject = Solver(sys.argv[1:])
+	
 
 """
 
@@ -62,14 +93,4 @@ Repeat this process until all solutions are found    If the highest degree is an
 
 print "Your solutions are:", solution1, solution2, solution3....solution-N  **Possibly in a column**
 
-"""
-
-"""
-foo['key'] = {'key' : 'value'}
-{0: {1:5}, 1: {3:4}}
-print foo[0]
-{1:5}
-for coef, pwr in foo[0]:
-	print coef
-	print pwr
 """
