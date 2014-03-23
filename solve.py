@@ -30,36 +30,40 @@ class Solver:
 		print
 		while final_iteration > initial_iteration:
 			for arg in self.args:
-				#x = x + 1  #Reassign x
+
 				#power
 				p = 2*x
 				#coefficient
 				x = x + 1
 				initial_iteration = initial_iteration + 1
+				#Debugging
 				print "power place is ", p
 				print "x is", x
 				print "iteration = ", initial_iteration
+				#coefficient
 				c = p + 1
 				#if the coeff place is > the total arguments break the for loop, occurs when final_iteration = initial_iteration, so the while loop is also broken
 				if c > argtotal:
 					break
 				print "coeff place is ", c
-
-				#Debugging				
 				print
 				
 				break
 				
 				#FIX: Doesn't print out an extra coeffcient place, but the assignment is still taking place on line 42, line 44 prevents the printing of it though. Will this be a problem later on?    Return may help fix this?
-
+				
+		#MAYBE INSERT A 0 AT THE BEGINNING OF SELF.ARGS TO GET CORRECT INDEXING AND PLACEMENT?
 		#MAYBE USE THIS?
-
+"""
 		n = 0
+		print self.args
+		print len(self.args)
 		for args in self.args:
+			if n > len(self.args):
+				break
 			numbers.append(self.args[n])
 			n = n + 1
-		print numbers
-			
+"""			
 			
 solverObject = Solver(sys.argv[1:])
 solverObject.coeff_power_placement()
