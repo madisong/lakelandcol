@@ -1,33 +1,63 @@
 #Written By Collin Lakeland
-
 #Program to solve any equation using Newton's Method
 
-from __future__ import division 		#division module makes it so the division operator doesn't round the quotient
-import cmath                           #cmath module allows for complex solutions
+
+#Division module makes it so division operator doesn't round the quotient
+from __future__ import division
+#cmath module allows for complex solutions, may or may not be necessary
+#at this point
+import cmath
 import sys
 
 class Solver:
 
 	def __init__(self, argv):
+		#User input
 		self.guess = int()
-		self.o = []
 		self.args = argv
 		print self.args
+		print self.args.index('1')
+		print self.args.index('2')
+		print self.args.index('3')
+		
+	#power_rule method is used on coeffcient/power pairs, ex. elements at 
+	#(1,2),(3,4), etc
 	
-	def coeff_power_placement(self):
+	def power_rule(self):
+		
+		for arg in self.args:
+			x = 1
+			#Power elements
+			n = 2*x
+			#Subtract initial argument, the program name, and divide it by 2
+			#to get the correct iterations
+			argcounter = (len(self.args)-1)/2
+			if argcounter < 0:
+				break
+			#power * corresponding coefficient ^ (power - 1)
+			#convert list elements to integers
+			opertation = 
+int(self.args[n])*int(self.args[n-1])**int(self.args[n]) 
+- 1
+			x += 1
+			
+		print argcounter
+
+		
+		"""
 		numbers = []
 		c = 1
 		x = 1
 		#subtract 0th argument
 		argtotal = len(sys.argv)-1
 		#User enters even number of arguments
-		#argcounter is also the number of iterations needed for correct coeffcient/power placement
+		#argcounter is also the number of iterations needed for correct 
+		#coeffcient/power placement
 		final_iteration = argtotal/2
 		initial_iteration = 0
 		#print argtotal, argcounter
-		
-		print "initial coef place is", c
-		print
+
+		print "initial coef place is %d\n" % c
 		while final_iteration > initial_iteration:
 			for arg in self.args:
 
@@ -42,19 +72,23 @@ class Solver:
 				print "iteration = ", initial_iteration
 				#coefficient
 				c = p + 1
-				#if the coeff place is > the total arguments break the for loop, occurs when final_iteration = initial_iteration, so the while loop is also broken
+				#if the coeff place is > the total arguments break the for
+				#loop, occurs when final_iteration = initial_iteration, so the
+				#while loop is also broken
 				if c > argtotal:
 					break
-				print "coeff place is ", c
-				print
+				print "coeff place is %d\n" % c
 				
 				break
 				
-				#FIX: Doesn't print out an extra coeffcient place, but the assignment is still taking place on line 42, line 44 prevents the printing of it though. Will this be a problem later on?    Return may help fix this?
+				#FIX: Doesn't print out an extra coeffcient place, but 
+				#the assignment is still taking place
+		
+				#FIX: convert list arguments to integers maybe using for loop
 				
 		#MAYBE INSERT A 0 AT THE BEGINNING OF SELF.ARGS TO GET CORRECT INDEXING AND PLACEMENT?
 		#MAYBE USE THIS?
-"""
+	
 		n = 0
 		print self.args
 		print len(self.args)
@@ -63,10 +97,9 @@ class Solver:
 				break
 			numbers.append(self.args[n])
 			n = n + 1
-"""			
-			
-solverObject = Solver(sys.argv[1:])
-solverObject.coeff_power_placement()
+				"""
+solverObject = Solver(sys.argv)
+solverObject.power_rule()
 	
 	
 	#print guess
