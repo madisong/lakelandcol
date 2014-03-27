@@ -2,7 +2,8 @@
 #Program to solve any equation using Newton's Method
 
 
-#Division module makes it so division operator doesn't round the quotient
+#division module makes it so division operator doesn't round the 
+#quotient
 from __future__ import division
 #cmath module allows for complex solutions, may or may not be necessary
 #at this point
@@ -15,13 +16,14 @@ class Solver:
 		#User input
 		self.guess = int()
 		self.args = argv
+		#Debigging
 		print self.args
-		print self.args.index('1')
-		print self.args.index('2')
-		print self.args.index('3')
+		#print self.args.index('1')
+		#print self.args.index('2')
+		#print self.args.index('3')
 		
-	#power_rule method is used on coeffcient/power pairs, ex. elements at 
-	#(1,2),(3,4), etc
+	#power_rule method is used on coeffcient/power pairs, ex. elements 
+	#at (1,2),(3,4), etc
 	
 	def power_rule(self):
 		
@@ -29,20 +31,25 @@ class Solver:
 			x = 1
 			#Power elements
 			n = 2*x
-			#Subtract initial argument, the program name, and divide it by 2
-			#to get the correct iterations
+			#Subtract initial argument, the program name, and divide it 
+			#by 2 to get the correct iterations
 			argcounter = (len(self.args)-1)/2
+			print "p is", int(self.args[n])
+			print "c is", int(self.args[n-1])
 			if argcounter < 0:
+				
 				break
 			#power * corresponding coefficient ^ (power - 1)
 			#convert list elements to integers
-			opertation = 
-int(self.args[n])*int(self.args[n-1])**int(self.args[n]) 
-- 1
+			#TODO: If I try and break this line it errors
+			o = int(self.args[n])*int(self.args[n-1])**int(self.args[n]) - 1
 			x += 1
-			
+			argcounter -= 1
+		
 		print argcounter
+		print o
 
+		#Useless code and comments, at the moment.
 		
 		"""
 		numbers = []
@@ -72,22 +79,25 @@ int(self.args[n])*int(self.args[n-1])**int(self.args[n])
 				print "iteration = ", initial_iteration
 				#coefficient
 				c = p + 1
-				#if the coeff place is > the total arguments break the for
-				#loop, occurs when final_iteration = initial_iteration, so the
-				#while loop is also broken
+				#if the coeff place is > the total arguments break the 
+				#for loop, occurs when final_iteration = 
+				#initial_iteration, so the while loop is also broken
 				if c > argtotal:
 					break
 				print "coeff place is %d\n" % c
 				
 				break
 				
-				#FIX: Doesn't print out an extra coeffcient place, but 
-				#the assignment is still taking place
+				FIX: Doesn't print out an extra coeffcient place, but 
+				the assignment is still taking place
 		
-				#FIX: convert list arguments to integers maybe using for loop
+				FIX: convert list arguments to integers maybe using for
+				loop
 				
-		#MAYBE INSERT A 0 AT THE BEGINNING OF SELF.ARGS TO GET CORRECT INDEXING AND PLACEMENT?
-		#MAYBE USE THIS?
+		MAYBE INSERT A 0 AT THE BEGINNING OF SELF.ARGS TO GET CORRECT
+		INDEXING AND PLACEMENT?
+		
+		MAYBE USE THIS?
 	
 		n = 0
 		print self.args
