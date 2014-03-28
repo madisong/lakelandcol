@@ -26,17 +26,19 @@ class Solver:
 	#at (1,2),(3,4), etc
 	
 	def power_rule(self):
+		x = 1
+		#Power elements
+		n = 2*x
+		#Subtract initial argument, the program name, and divide it 
+		#by 2 to get the correct iterations
+		argcounter = (len(self.args)-1)/2
 		
 		for arg in self.args:
-			x = 1
-			#Power elements
-			n = 2*x
-			#Subtract initial argument, the program name, and divide it 
-			#by 2 to get the correct iterations
-			argcounter = (len(self.args)-1)/2
-			print "p is", int(self.args[n])
-			print "c is", int(self.args[n-1])
-			if argcounter < 0:
+			
+			print "p is %d" % int(self.args[n])
+			print "c is %d" % int(self.args[n-1])
+			print "n is", n
+			if argcounter == 0:
 				
 				break
 			#power * corresponding coefficient ^ (power - 1)
@@ -46,8 +48,10 @@ class Solver:
 			x += 1
 			argcounter -= 1
 		
-		print argcounter
-		print o
+			print "argcounter is %d" % argcounter
+		print "result is %d" % o
+		print self.args.index('3')
+		print self.args.index('1')
 
 		#Useless code and comments, at the moment.
 		
