@@ -2,7 +2,6 @@
 
 #Program to solve any equation using Newton's Method
 
-
 #division module makes it so division operator doesn't round the 
 #quotient
 from __future__ import division
@@ -62,7 +61,8 @@ class Solver:
 				#Power elements
 				n = 2*x
 				argcounter -= 1
-				#%f is the string formatter for REAL, floating numbers. This may cause problems later on with complex solutions.
+				#%f is the string formatter for REAL, floating numbers.
+				 #This may cause problems later on with complex solutions.
 				print "argcounter is %f" % argcounter
 				print "result is %f" % self.o
 				#When  the result is computed, break the for loop, go
@@ -89,7 +89,8 @@ class Solver:
 		print "the initial sum is %f" % sum
 		while a <= n:
 			a += 1
-			#When a = n, a then = a+1, which is out of the list range. This prevents it from erroring
+			#When a = n, a then = a+1, which is out of the list range. 
+			#This prevents it from erroring.
 			if a > n:
 				break
 			print "a is %d" % a
