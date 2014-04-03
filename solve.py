@@ -29,13 +29,14 @@ class Solver:
 	#at (1,2),(3,4), etc.
 	
 	def power_rule(self):
-		#For results of power_rule. o is initially a placeholder.
+		#For results of power_rule. 0 is initially a placeholder.
 		self.o = 'solver.py'
 		new_list = []
+		list_without_power_rule_operation = []
 		x = 1
 		#initial n value
 		n = 2
-		#Subtract initial argument, the program name, and divide it 
+		#Subtract initial argument, the program name, and divide it
 		#by 2 to get the correct iterations
 		argcounter = (len(self.args) - 1) / 2
 		
@@ -47,8 +48,8 @@ class Solver:
 				break
 			for arg in self.args:
 			
-				print "p is %d" % int(self.args[n])
-				print "c is %d" % int(self.args[n-1])
+				print "p is %d" % float(self.args[n])
+				print "c is %d" % float(self.args[n-1])
 				print "x is %d" % x
 				print "n is %d" % n
 				
@@ -72,6 +73,17 @@ class Solver:
 		#TODO: string formatting for lists?
 		print "new_list is", new_list
 		
+		#Creates list with results that power_rule hasn't been applied to
+		while argcounter >= 0:
+			for arg in self.args
+				
+				print "p is %d" % float(self.args[n])
+				print "c is %d" % float(self.args[n-1])
+				print "x is %d" % x
+				print "n is %d" % n
+				
+				self.new = float(self.args[n-1]) * self.guess ** (
+		
 	#TODO: The creation of new_list should be another method, but I
 	#don't know how to do that, because the results (self.o) constantly
 	#get updated.
@@ -85,6 +97,8 @@ class Solver:
 		n = len(self.args) - 1
 		#Add the first two elements.
 		#float is used because you could have decimals as input
+		print self.args
+		#TODO: Correct idea, but wrong result.
 		sum = float(self.args[a-1]) + float(self.args[a])
 		print "the initial sum is %f" % sum
 		while a <= n:
@@ -97,6 +111,11 @@ class Solver:
 			sum = sum + float(self.args[a])
 			print "the current sum is %f\n" % sum
 		print "The final sum is %f" % sum
+	
+	def new_argv(self):
+		new_args = []
+		print new_args
+	
 	
 
 #Useless code and comments, at the moment.
@@ -150,6 +169,7 @@ n = n + 1
 solverObject = Solver(sys.argv)
 solverObject.power_rule()
 solverObject.Newtons_method()
+solverObject.new_argv()
 
 """
 
