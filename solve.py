@@ -10,6 +10,7 @@ from __future__ import division
 #at this point
 import cmath
 import sys
+import time
 
 class Solver:
 
@@ -18,21 +19,21 @@ class Solver:
 		"Note your equation must be set equal to zero,\nand your guess "
 		"must be fairly close to the root.")
 		
-		#User input; converted input to integer.
-		self.guess = int(input("Take a guess: "))
+		#User input; converted input to float.
+		self.guess = float(input("Take a guess: "))
 		#Initial coefficients and powers.
 		self.args = argv
 		#Debigging
-		print self.args
+		#print self.args
 		
 	#power_rule method is used on coeffcient/power pairs, ex. elements 
 	#at (1,2),(3,4), etc.
 	
 	def power_rule(self):
-		#For results of power_rule. 0 is initially a placeholder.
-		self.o = 'solver.py'
-		new_list = []
-		list_without_power_rule_operation = []
+		print "power_rule output:\n"
+		#For results of power_rule. 0 is a placeholder.
+		self.o = float()
+		self.new_list = []
 		x = 1
 		#initial n value
 		n = 2
@@ -41,8 +42,8 @@ class Solver:
 		argcounter = (len(self.args) - 1) / 2
 		
 		while argcounter >= 0:
-	
-			new_list.append(self.o)
+			#TODO: should this be placed elsewhere in the method?
+			self.new_list.append(self.o)
 			#Stop appending once argcounter = 0.
 			if argcounter == 0:
 				break
@@ -63,7 +64,7 @@ class Solver:
 				n = 2*x
 				argcounter -= 1
 				#%f is the string formatter for REAL, floating numbers.
-				 #This may cause problems later on with complex solutions.
+				#This may cause problems later on with complex solutions.
 				print "argcounter is %f" % argcounter
 				print "result is %f" % self.o
 				#When  the result is computed, break the for loop, go
@@ -71,107 +72,156 @@ class Solver:
 				#new_list.
 				break
 		#TODO: string formatting for lists?
-		print "new_list is", new_list
+		print "new_list is\n", self.new_list
 		
-		#Creates list with results that power_rule hasn't been applied to
+
+	#TODO: The creation of new_list should be another method, but I
+	#don't know how to do that, because the elements (self.o) will constantly
+	#get updated.
+
+
+	
+	#Doesn't apply power_rule operation just substitutes self.guess into the
+	#original coefficients and corresponding powers (argv).
+	def substitution(self):
+		print "substitution output:\n"
+		self.y = float()
+		x = 1
+		n = 2
+		self.list_without_power_rule_operation = []
+		argcounter = (len(self.args) - 1) / 2
+		
 		while argcounter >= 0:
-			for arg in self.args
+			self.list_without_power_rule_operation.append(self.y)
+			#Stop appending once argcounter = 0.
+			if argcounter == 0:
+				break
+			for arg in self.args:
 				
 				print "p is %d" % float(self.args[n])
 				print "c is %d" % float(self.args[n-1])
 				print "x is %d" % x
 				print "n is %d" % n
 				
-				self.new = float(self.args[n-1]) * self.guess ** (
-		
-	#TODO: The creation of new_list should be another method, but I
-	#don't know how to do that, because the results (self.o) constantly
-	#get updated.
+				self.y = float( self.args[n-1] ) * self.guess ** ( 
+				float( self.args[n] ) )
+				
+				x += 1
+				#Power elements
+				n = 2*x
+				argcounter -= 1
+				print "argcounter is % f" % argcounter
+				print "self.y is % f" % self.y
+				#When  the result is computed, break the for loop, go
+				#back to the while loop and append each result into
+				#new_list.				
+				break
+		print "substitution list is\n", self.list_without_power_rule_operation
 	
-	#def new_coeff_power_list(self):
-		
 	
-	def Newtons_method(self):
-		#This sums all the elements in the initial list (argv).
+
+	def sum(self):
+		print "sum_substitution output:\n"
+		print ( "list_without_operation is", 
+		
+		self.list_without_power_rule_operation )
+		
+		#This sums all the elements in the substitution list.
 		a = 2
-		n = len(self.args) - 1
+		n = len(self.list_without_power_rule_operation) - 1
+		print "initial n is %d" % n
 		#Add the first two elements.
-		#float is used because you could have decimals as input
-		print self.args
-		#TODO: Correct idea, but wrong result.
-		sum = float(self.args[a-1]) + float(self.args[a])
-		print "the initial sum is %f" % sum
+		#float is used because you could have decimals as input and the elements
+		#must be converted from strings.
+		
+		#Outer parentheses are used because the line is broken; they keep the
+		#operation contained
+		self.substitution_list_sum = (
+		
+		self.list_without_power_rule_operation[a-1] +
+		self.list_without_power_rule_operation[a] )
+		
+		print "the initial sum is %f" % self.substitution_list_sum
 		while a <= n:
 			a += 1
-			#When a = n, a then = a+1, which is out of the list range. 
+			print "a is %d" % a
+			#When a = n, then a = a+1, which is out of the list range. 
 			#This prevents it from erroring.
 			if a > n:
+				print "a is greater than n"
 				break
 			print "a is %d" % a
-			sum = sum + float(self.args[a])
-			print "the current sum is %f\n" % sum
-		print "The final sum is %f" % sum
+			
+			self.substitution_list_sum = ( self.substitution_list_sum + 
+			float(self.list_without_power_rule_operation[a]) )
+			
+			print "the current sum is %f\n" % self.substitution_list_sum
+		print "The final sum is %f\n" % self.substitution_list_sum
+		
+		#TODO: Shouldn't be copied and pasted, maybe have it loop through each
+		#list, or should it be a new method?
+		#This sums all the elements in new_list
+		print "This is the output for new_list:\n"
+		a = 2
+		n = len(self.new_list) - 1
+		print "initial n is %d" % n
+		#Add the first two elements.
+		#float is used because you could have decimals as input and the elements
+		#must be converted from strings.
+		
+		self.new_list_sum = self.new_list[a-1] + self.new_list[a]
+		
+		print "the initial sum for new_list is is %f" % self.new_list_sum
+		while a <= n:
+			a += 1
+			print "a is %d" % a
+			#When a = n, then a = a+1, which is out of the list range. 
+			#This prevents it from erroring.
+			if a > n:
+				#Debugging
+				print "a is greater than n"
+				break
+			print "a is %d" % a
+			
+			self.new_list_sum = self.new_list_sum + float(self.new_list[a])
+			print "the current sum for new_list is %f\n" % self.new_list_sum
+		print "The final sum for new_list is %f\n" % self.new_list_sum
 	
-	def new_argv(self):
-		new_args = []
-		print new_args
-	
-	
+	#Applys the mathematical process called "Newton's method"
+	#Finds the zeros correctly, but the guess MUST be near the zero. If two
+	#zeros are 2 and -2, and the guess is 1, then it will give a solution of 2.
+	#If the guess is -1, then it will give a solution of -2; it all depends on 
+	#which zero is closer to the guess.
+	def Newtons_method(self):
+		print "Output for Newton's method:\n"
+		n = 0
+		while n <= 1000:
+			self.guess = ( self.guess - 
+			(self.substitution_list_sum/self.new_list_sum) )
+			n += 1
+			#time.sleep(5)
+			#print "n is %d" % n
+			#Repeat the process using the new self.guess; do this 10001 times
+			#for a high degree of accuracy
+			#Parenthesis calls the method, will not work without it.
+			self.power_rule()
+			self.substitution()
+			self.sum()
+		print "The answer is %f" % self.guess
 
-#Useless code and comments, at the moment.
-	
-"""
-numbers = []
-c = 1
-x = 1
-#subtract 0th argument
-argtotal = len(sys.argv)-1
-#User enters even number of arguments
-#argcounter is also the number of iterations needed for correct
-#coeffcient/power placement
-final_iteration = argtotal/2
-initial_iteration = 0
-#print argtotal, argcounter
+#TODO: Work on finding the other zeros, or on making the process of finding the
+#other zeros easier for the user; maybe prompt them?
 
-print "initial coef place is %d\n" % c
-while final_iteration > initial_iteration:
-for arg in self.args:
-
-#power
-p = 2*x
-#coefficient
-x = x + 1
-initial_iteration = initial_iteration + 1
-#Debugging
-print "power place is ", p
-print "x is", x
-print "iteration = ", initial_iteration
-#coefficient
-c = p + 1
-#if the coeff place is > the total arguments break the 
-#for loop, occurs when final_iteration = 
-#initial_iteration, so the while loop is also broken
-if c > argtotal:
-break
-print "coeff place is %d\n" % c
-
-break
-
-n = 0
-print self.args
-print len(self.args)
-for args in self.args:
-if n > len(self.args):
-break
-numbers.append(self.args[n])
-n = n + 1
-"""
 solverObject = Solver(sys.argv)
 solverObject.power_rule()
+solverObject.substitution()
+solverObject.sum()
 solverObject.Newtons_method()
-solverObject.new_argv()
+
+#Pseudocode
 
 """
+
 
 Define the derivative of the equation
 
