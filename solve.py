@@ -25,6 +25,8 @@ class Solver:
 		self.args = argv
 		#Debigging
 		#print self.args
+		self.func_call_counter = 1
+
 		
 	#power_rule method is used on coeffcient/power pairs, ex. elements 
 	#at (1,2),(3,4), etc.
@@ -120,15 +122,14 @@ class Solver:
 	
 	
 
-	def sum(self):
+	def sum(self, data_list):
 		print "sum_substitution output:\n"
-		print ( "list_without_operation is", 
-		
-		self.list_without_power_rule_operation )
+		print "list_without_operation is", data_list
 		
 		#This sums all the elements in the substitution list.
+		#func_call_counter keeps track of the number of function calls
 		a = 2
-		n = len(self.list_without_power_rule_operation) - 1
+		n = len(data_list) - 1
 		print "initial n is %d" % n
 		#Add the first two elements.
 		#float is used because you could have decimals as input and the elements
@@ -136,15 +137,12 @@ class Solver:
 		
 		#Outer parentheses are used because the line is broken; they keep the
 		#operation contained
-		self.substitution_list_sum = (
+		sum = float(data_list[a-1]) + float(data_list[a])
 		
-		self.list_without_power_rule_operation[a-1] +
-		self.list_without_power_rule_operation[a] )
-		
-		print "the initial sum is %f" % self.substitution_list_sum
+		print "the initial sum is %f" % sum
 		while a <= n:
 			a += 1
-			print "a is %d" % a
+			print "a is %d" % a	
 			#When a = n, then a = a+1, which is out of the list range. 
 			#This prevents it from erroring.
 			if a > n:
@@ -152,15 +150,21 @@ class Solver:
 				break
 			print "a is %d" % a
 			
-			self.substitution_list_sum = ( self.substitution_list_sum + 
-			float(self.list_without_power_rule_operation[a]) )
+			sum = ( sum + float(data_list[a]) )
+
+		if self.func_call_counter == 1:
+			self.substitution_list_sum = sum
+		elif self.func_call_counter == 2:
+			self.new_list_sum = sum
 			
-			print "the current sum is %f\n" % self.substitution_list_sum
-		print "The final sum is %f\n" % self.substitution_list_sum
+			print "the current sum is %f\n"
+		print "The final sum is %f\n" % sum
 		
+
 		#TODO: Shouldn't be copied and pasted, maybe have it loop through each
 		#list, or should it be a new method?
 		#This sums all the elements in new_list
+	"""
 		print "This is the output for new_list:\n"
 		a = 2
 		n = len(self.new_list) - 1
@@ -186,7 +190,7 @@ class Solver:
 			self.new_list_sum = self.new_list_sum + float(self.new_list[a])
 			print "the current sum for new_list is %f\n" % self.new_list_sum
 		print "The final sum for new_list is %f\n" % self.new_list_sum
-	
+	"""
 	#Applys the mathematical process called "Newton's method"
 	#Finds the zeros correctly, but the guess MUST be near the zero. If two
 	#zeros are 2 and -2, and the guess is 1, then it will give a solution of 2.
@@ -215,7 +219,8 @@ class Solver:
 solverObject = Solver(sys.argv)
 solverObject.power_rule()
 solverObject.substitution()
-solverObject.sum()
+solverObject.sum(solverObject.list_without_power_rule_operation)
+solverObject.sum(solverObject.new_list)
 solverObject.Newtons_method()
 
 #Pseudocode
