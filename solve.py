@@ -75,11 +75,6 @@ class Solver:
 				break
 		#TODO: string formatting for lists?
 		print "new_list is\n", self.new_list
-		
-
-	#TODO: The creation of new_list should be another method, but I
-	#don't know how to do that, because the elements (self.o) will constantly
-	#get updated.
 
 
 	
