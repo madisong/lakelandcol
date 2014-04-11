@@ -1,6 +1,6 @@
-#Written By Collin Lakeland
+#Written By Collin Lakeland.
 
-#Program to solve any equation using Newton's Method
+#This is a program to solve any equation using Newton's Method.
 
 #division module makes it so division operator doesn't round the 
 #quotient
@@ -23,13 +23,13 @@ class Solver:
 		self.guess = float(input("Take a guess: "))
 		#Initial coefficients and powers.
 		self.args = argv
-		#Debigging
-		#print self.args
-		self.func_call_counter = 1
+
+		#b helps count the number of sum method calls
+		self.b = 1
 
 		
 	#power_rule method is used on coeffcient/power pairs, ex. elements 
-	#at (1,2),(3,4), etc.
+	#at indexes (1,2),(3,4), etc.
 	
 	def power_rule(self):
 		print "power_rule output:\n"
@@ -121,13 +121,11 @@ class Solver:
 		print "substitution list is\n", self.list_without_power_rule_operation
 	
 	
-
+	#This sums all the elements in list_without_power_rule_operation and
+	#sums all the elements in new_list.
 	def sum(self, data_list):
-		print "sum_substitution output:\n"
-		print "list_without_operation is", data_list
-		
-		#This sums all the elements in the substitution list.
-		#func_call_counter keeps track of the number of function calls
+		print "sum method output:\n"
+		#print "list_without_operation is", data_list		
 		a = 2
 		n = len(data_list) - 1
 		print "initial n is %d" % n
@@ -135,62 +133,39 @@ class Solver:
 		#float is used because you could have decimals as input and the elements
 		#must be converted from strings.
 		
-		#Outer parentheses are used because the line is broken; they keep the
-		#operation contained
 		sum = float(data_list[a-1]) + float(data_list[a])
 		
 		print "the initial sum is %f" % sum
 		while a <= n:
 			a += 1
 			print "a is %d" % a	
+			
+			#when self.b is odd
+			if self.b % 2 != 0:
+				self.substitution_list_sum = sum
+				print "b is %d" % self.b
+			
+			#when self.b is even
+			elif self.b % 2 == 0:
+				self.new_list_sum = sum
+				print "b is %d" % self.b
+			self.b += 1
+			
 			#When a = n, then a = a+1, which is out of the list range. 
 			#This prevents it from erroring.
 			if a > n:
 				print "a is greater than n"
 				break
+				
 			print "a is %d" % a
-			
 			sum = ( sum + float(data_list[a]) )
-
-		if self.func_call_counter == 1:
-			self.substitution_list_sum = sum
-		elif self.func_call_counter == 2:
-			self.new_list_sum = sum
 			
-			print "the current sum is %f\n"
+			print "the current sum is %f\n" % sum
+
+		print "This is", self.b % 2 
 		print "The final sum is %f\n" % sum
-		
 
-		#TODO: Shouldn't be copied and pasted, maybe have it loop through each
-		#list, or should it be a new method?
-		#This sums all the elements in new_list
-	"""
-		print "This is the output for new_list:\n"
-		a = 2
-		n = len(self.new_list) - 1
-		print "initial n is %d" % n
-		#Add the first two elements.
-		#float is used because you could have decimals as input and the elements
-		#must be converted from strings.
-		
-		self.new_list_sum = self.new_list[a-1] + self.new_list[a]
-		
-		print "the initial sum for new_list is is %f" % self.new_list_sum
-		while a <= n:
-			a += 1
-			print "a is %d" % a
-			#When a = n, then a = a+1, which is out of the list range. 
-			#This prevents it from erroring.
-			if a > n:
-				#Debugging
-				print "a is greater than n"
-				break
-			print "a is %d" % a
-			
-			self.new_list_sum = self.new_list_sum + float(self.new_list[a])
-			print "the current sum for new_list is %f\n" % self.new_list_sum
-		print "The final sum for new_list is %f\n" % self.new_list_sum
-	"""
+
 	#Applys the mathematical process called "Newton's method"
 	#Finds the zeros correctly, but the guess MUST be near the zero. If two
 	#zeros are 2 and -2, and the guess is 1, then it will give a solution of 2.
@@ -203,14 +178,15 @@ class Solver:
 			self.guess = ( self.guess - 
 			(self.substitution_list_sum/self.new_list_sum) )
 			n += 1
-			#time.sleep(5)
-			#print "n is %d" % n
+			#time.sleep(10)
+			print "n is %d" % n
 			#Repeat the process using the new self.guess; do this 10001 times
-			#for a high degree of accuracy
+			#for a high degree of accuracy.
 			#Parenthesis calls the method, will not work without it.
 			self.power_rule()
 			self.substitution()
-			self.sum()
+			self.sum(self.list_without_power_rule_operation)
+			self.sum(self.new_list)
 		print "The answer is %f" % self.guess
 
 #TODO: Work on finding the other zeros, or on making the process of finding the
