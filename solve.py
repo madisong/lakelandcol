@@ -23,26 +23,34 @@ class Solver:
 		self.guess = complex(input("Take a guess: "))
 		#Initial coefficients and powers.
 		self.args = argv
-
 		self.sum_call_counter = 1
 		self.power_rule_counter = 1
-
-	#power_rule method is used on coeffcient/power pairs, ex. elements 
-	#at indexes (1,2),(3,4), etc.	
-	def power_rule/substitution(self):
-		print "power_rule output:\n"
+		#results of substitution
+		self.y = complex()
+		#results of power_rule
 		self.o = complex()
-		#For results of power_rule. 0 is a placeholder in this list
+		#power_rule method is used on coeffcient/power pairs, ex. elements 
+		#at indexes (1,2),(3,4), etc.		
 		self.new_list = []
+		self.list_without_power_rule_operation = []
+	
+	def power_rule_substitution(self):
 		x = 1
 		#initial n value
 		n = 2
+		print "power_rule_substitution output:\n"
+		print "The initial power counter value is\n", self.power_rule_counter
+		if self.power_rule_counter % 2 == 0:
+			print "The counter is even and:\n"
+			print "x is",x
+			print "n is", n
 		#Subtract initial argument, the program name, and divide it
 		#by 2 to get the correct iterations
 		argcounter = (len(self.args) - 1) / 2
 		
+		#For results of power_rule. 0 is a placeholder in this list
+		
 		while argcounter >= 0:
-			self.new_list.append(self.o)
 			#Stop appending once argcounter = 0.
 			if argcounter == 0:
 				break
@@ -51,45 +59,55 @@ class Solver:
 				print "p is", complex(self.args[n])
 				print "c is", complex(self.args[n-1])
 				print "x is", x
-				print "n is ", n
-				print "This power is", float(self.args[n]) - 1
-				
+				print "n is ", n				
 				#the call is odd
-				if self.power_rule_counter % 2 != 0
-				#power * (corresponding coefficient * guess ^ (power - 1))
-				#convert list elements to integers
-				self.o = float(self.args[n]) * ( float(self.args[n-1]) * 
-				self.guess ** ( float(self.args[n]) - 1 ) ) 
-				
-				#substitution, no power rule operation
-				self.y = float( self.args[n-1] ) * self.guess ** ( 
-				float( self.args[n] ) )
-				
+				if self.power_rule_counter % 2 != 0:
+					#power rule operation
+					#power * (corresponding coefficient * guess ^ (power - 1))
+					#convert list elements to integers
+					self.o = float(self.args[n]) * ( float(self.args[n-1]) * 
+					self.guess ** ( float(self.args[n]) - 1 ) )
+					print "self.o is", self.o
+					self.new_list.append(self.o)
+
+				#the call is even
+				if self.power_rule_counter % 2 == 0:
+					#substitution, no power rule operation
+					self.y = float( self.args[n-1] ) * self.guess ** ( 
+					float( self.args[n] ) )
+					print "self.y is", self.y
+					self.list_without_power_rule_operation.append(self.y)
 				x += 1
 				#Power elements
 				n = 2*x
 				argcounter -= 1
 				print "argcounter is %d" % argcounter
-				print "result is", self.o
+				#print "result is", self.o
 				#When  the result is computed, break the for loop, go
 				#back to the while loop and append each result into
 				#new_list.
 				break
+		print "The new value is\n", self.power_rule_counter
 		print "new_list is\n", self.new_list
-	
+		
+		#This is supposed to prevent an infinite loop from occuring, while
+		#allowing self.power_rule_substitution to be called a second time.
+		if self.power_rule_counter % 2 != 0:
+			self.power_rule_counter += 1
+			self.power_rule_substitution()
+			print "substitution list is", self.list_without_power_rule_operation
+		else:
+			self.power_rule_counter += 1
 	#Doesn't apply power_rule operation just substitutes self.guess into the
 	#original coefficients and corresponding powers (argv).
 	"""
 	def substitution(self):
 		print "substitution output:\n"
-		self.y = complex()
 		x = 1
 		n = 2
-		self.list_without_power_rule_operation = []
 		argcounter = (len(self.args) - 1) / 2
 		
 		while argcounter >= 0:
-			self.list_without_power_rule_operation.append(self.y)
 			#Stop appending once argcounter = 0.
 			#Contradicts the while condtion because self.y must be appended even
 			#when argcounter equals 0
@@ -122,6 +140,7 @@ class Solver:
 	#This sums all the elements in list_without_power_rule_operation and
 	#sums all the elements in new_list.
 	def sum(self, data_list):
+
 		print "sum method output:\n"
 		#print "list_without_operation is", data_list		
 		a = 2
@@ -176,13 +195,14 @@ class Solver:
 			self.guess = ( self.guess - 
 			(self.substitution_list_sum/self.new_list_sum) )
 			n += 1
-			#time.sleep(10)
+			print "N IS", n
+			time.sleep(10)
 			#print "n is %d" % n
 			#Repeat the process using the new self.guess; do this 1001 times
 			#for a high degree of accuracy.
 			#Parenthesis calls the method, will not work without it.
-			self.power_rule()
-			self.substitution()
+			self.power_rule_substitution()
+			#self.substitution()
 			self.sum(self.list_without_power_rule_operation)
 			self.sum(self.new_list)
 			print "Continuation of Newton's method Output:\n"
@@ -200,9 +220,6 @@ class Solver:
 #TODO: Making the process of finding the other zeros easier for the user; 
 #maybe prompt them?
 
-#TODO: I don't think there is an efficient way of formatting complex numbers in
-#print statements, therefore I probably shouldn't use formatting this time.
-#Every print statement with complex numbers is just for debugging anyway.
 
 #The arguments 1 2 1 0 give ZeroDivisionError when the guess = 1, but works
 #correctly when the guess = 1j
@@ -214,12 +231,9 @@ class Solver:
 
 #TODO: DO NOT FORGET ABOUT THE COMPLEX CONJUGATES THEOREM
 
-#TODO: power_rule and substitution methods are very similar, should substitution
-#just be another power_rule method call?
-
 solverObject = Solver(sys.argv)
-solverObject.power_rule()
-solverObject.substitution()
+solverObject.power_rule_substitution()
+#solverObject.substitution()
 solverObject.sum(solverObject.list_without_power_rule_operation)
 print solverObject.sum_call_counter
 solverObject.sum(solverObject.new_list)
