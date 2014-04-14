@@ -40,6 +40,9 @@ and the guess is 1, then it will give a solution of 2. If the guess is -1,
 then it will give a solution of -2; it all depends on which zero is closer
 to the guess.
 
+Also, if the zero is complex (contains i), then your guess must also be complex,
+for a real guess is not close to a complex guess.
+
 I DO NOT ENDORSE OR SUPPORT USING THIS AS A CRUTCH IN MATH CLASS, IN FACT 
 I DESPISE IT. SOLVE YOUR OWN PROBLEMS! ATTEMPT TO USE THIS PROGRRAM TO AID 
 YOU IN MATHEMATICAL DISCOVERY.

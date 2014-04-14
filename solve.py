@@ -2,16 +2,16 @@
 
 #This is a program to solve any equation using Newton's Method.
 
-#division module makes it so division operator doesn't round the 
-#quotient
+#division module makes it so division operator doesn't round the  quotient
 from __future__ import division
 
-#cmath module allows for complex solutions, may or may not be necessary
-#at this point
+#cmath module allows for complex operations and solutions
 import cmath
 import sys
 import time
 
+#the imaginary number  i = j in Python
+#Any number with a j appended to it is treated as a complex number by Python.
 class Solver:
 
 	def __init__(self, argv):
@@ -19,22 +19,19 @@ class Solver:
 		"Note your equation must be set equal to zero,\nand your guess "
 		"must be fairly close to the root.")
 		
-		#User input; converted input to float.
-		self.guess = float(input("Take a guess: "))
+		#User input; converted to complex type.
+		self.guess = complex(input("Take a guess: "))
 		#Initial coefficients and powers.
 		self.args = argv
 
-		#b helps count the number of sum method calls
-		self.b = 1
+		self.sum_call_counter = 1
 
-		
 	#power_rule method is used on coeffcient/power pairs, ex. elements 
-	#at indexes (1,2),(3,4), etc.
-	
+	#at indexes (1,2),(3,4), etc.	
 	def power_rule(self):
 		print "power_rule output:\n"
-		#For results of power_rule. 0 is a placeholder.
-		self.o = float()
+		self.o = complex()
+		#For results of power_rule. 0 is a placeholder in this list
 		self.new_list = []
 		x = 1
 		#initial n value
@@ -44,17 +41,17 @@ class Solver:
 		argcounter = (len(self.args) - 1) / 2
 		
 		while argcounter >= 0:
-			#TODO: should this be placed elsewhere in the method?
 			self.new_list.append(self.o)
 			#Stop appending once argcounter = 0.
 			if argcounter == 0:
 				break
 			for arg in self.args:
 			
-				print "p is %d" % float(self.args[n])
-				print "c is %d" % float(self.args[n-1])
-				print "x is %d" % x
-				print "n is %d" % n
+				print "p is", complex(self.args[n])
+				print "c is", complex(self.args[n-1])
+				print "x is", x
+				print "n is ", n
+				print "This power is", float(self.args[n]) - 1
 				
 				#power * (corresponding coefficient * guess ^ (power - 1))
 				#convert list elements to integers
@@ -65,24 +62,20 @@ class Solver:
 				#Power elements
 				n = 2*x
 				argcounter -= 1
-				#%f is the string formatter for REAL, floating numbers.
-				#This may cause problems later on with complex solutions.
-				print "argcounter is %f" % argcounter
-				print "result is %f" % self.o
+				print "argcounter is %d" % argcounter
+				print "result is", self.o
 				#When  the result is computed, break the for loop, go
 				#back to the while loop and append each result into
 				#new_list.
 				break
 		#TODO: string formatting for lists?
 		print "new_list is\n", self.new_list
-
-
 	
 	#Doesn't apply power_rule operation just substitutes self.guess into the
 	#original coefficients and corresponding powers (argv).
 	def substitution(self):
 		print "substitution output:\n"
-		self.y = float()
+		self.y = complex()
 		x = 1
 		n = 2
 		self.list_without_power_rule_operation = []
@@ -91,14 +84,16 @@ class Solver:
 		while argcounter >= 0:
 			self.list_without_power_rule_operation.append(self.y)
 			#Stop appending once argcounter = 0.
+			#Contradicts the while condtion because self.y must be appended even
+			#when argcounter equals 0
 			if argcounter == 0:
 				break
 			for arg in self.args:
 				
-				print "p is %d" % float(self.args[n])
-				print "c is %d" % float(self.args[n-1])
-				print "x is %d" % x
-				print "n is %d" % n
+				print "p is", complex(self.args[n])
+				print "c is", complex(self.args[n-1])
+				print "x is", x
+				print "n is", n
 				
 				self.y = float( self.args[n-1] ) * self.guess ** ( 
 				float( self.args[n] ) )
@@ -107,8 +102,8 @@ class Solver:
 				#Power elements
 				n = 2*x
 				argcounter -= 1
-				print "argcounter is % f" % argcounter
-				print "self.y is % f" % self.y
+				print "argcounter is %d" % argcounter
+				print "self.y is", self.y
 				#When  the result is computed, break the for loop, go
 				#back to the while loop and append each result into
 				#new_list.				
@@ -125,41 +120,38 @@ class Solver:
 		n = len(data_list) - 1
 		print "initial n is %d" % n
 		#Add the first two elements.
-		#float is used because you could have decimals as input and the elements
-		#must be converted from strings.
+		#complex is used because you could have complex numbers as input and
+		#the elements must be converted from strings.
 		
-		sum = float(data_list[a-1]) + float(data_list[a])
+		sum = complex(data_list[a-1]) + complex(data_list[a])
 		
-		print "the initial sum is %f" % sum
+		print "the initial sum is", sum
 		while a <= n:
 			a += 1
 			print "a is %d" % a	
-			
-			#when self.b is odd
-			if self.b % 2 != 0:
-				self.substitution_list_sum = sum
-				print "b is %d" % self.b
-			
-			#when self.b is even
-			elif self.b % 2 == 0:
-				self.new_list_sum = sum
-				print "b is %d" % self.b
-			self.b += 1
-			
 			#When a = n, then a = a+1, which is out of the list range. 
 			#This prevents it from erroring.
 			if a > n:
 				print "a is greater than n"
 				break
-				
 			print "a is %d" % a
-			sum = ( sum + float(data_list[a]) )
+			sum = ( sum + complex(data_list[a]) )
 			
-			print "the current sum is %f\n" % sum
+			print "the current sum is \n", sum
 
-		print "This is", self.b % 2 
-		print "The final sum is %f\n" % sum
-
+		#print "This is", self.sum_call_counter % 2
+		#when self.sum_call_counter is odd
+		if self.sum_call_counter % 2 != 0:
+			print "b is odd", self.sum_call_counter
+			self.substitution_list_sum = sum
+			self.sum_call_counter += 1
+			
+		#when self.sum_call_counter is even
+		elif self.sum_call_counter % 2 == 0:
+			print "b is even", self.sum_call_counter
+			self.new_list_sum = sum
+			self.sum_call_counter += 1
+		print "The final sum is \n", sum
 
 	#Applys the mathematical process called "Newton's method"
 	#Finds the zeros correctly, but the guess MUST be near the zero. If two
@@ -169,28 +161,63 @@ class Solver:
 	def Newtons_method(self):
 		print "Output for Newton's method:\n"
 		n = 0
+		#If this wasn't here it would error, because self.new_list_sum doesn't
+		#exist yet. May not be necessary now.
+		#self.sum(self.new_list)
 		while n <= 1000:
 			self.guess = ( self.guess - 
 			(self.substitution_list_sum/self.new_list_sum) )
 			n += 1
 			#time.sleep(10)
-			print "n is %d" % n
-			#Repeat the process using the new self.guess; do this 10001 times
+			#print "n is %d" % n
+			#Repeat the process using the new self.guess; do this 1001 times
 			#for a high degree of accuracy.
 			#Parenthesis calls the method, will not work without it.
 			self.power_rule()
 			self.substitution()
 			self.sum(self.list_without_power_rule_operation)
 			self.sum(self.new_list)
-		print "The answer is %f" % self.guess
+			print "Continuation of Newton's method Output:\n"
+			print "The new self.guess is", self.guess
+			continue
 
-#TODO: Work on finding the other zeros, or on making the process of finding the
-#other zeros easier for the user; maybe prompt them?
+		if self.guess.imag == 0:
+			print "This is a pure real answer\n"
+			print "The answer is", self.guess.real
+
+		else:
+			print "This is a complex answer\n"
+			print "The answer is", self.guess
+
+#TODO: Making the process of finding the other zeros easier for the user; 
+#maybe prompt them?
+
+#TODO: I don't think there is an efficient way of formatting complex numbers in
+#print statements, therefore I probably shouldn't use formatting this time.
+#Every print statement with complex numbers is just for debugging anyway.
+
+#The arguments 1 2 1 0 give ZeroDivisionError when the guess = 1, but works
+#correctly when the guess = 1j
+
+#SOMETIMES WHEN THE GUESS IS CLOSE TO 0 IT GIVES A COMPLEX SOLUTION, LIKE WITH
+#ARGUMENTS 1 0.5 -15 3
+
+#FREQUENT ZERO DIVISON ERRORS ESPECIALLY WHEN 0 IS THE GUESS
+
+#TODO: DO NOT FORGET ABOUT THE COMPLEX CONJUGATES THEOREM
+
+#TODO: power_rule and substitution methods are very similar, should substitution
+#just be another power_rule method call?
+
+#Potential formatting for complex numbers
+#n = 3 + 4j
+#print "This complex number is %f + %fj" % (n.real, n.imag)
 
 solverObject = Solver(sys.argv)
 solverObject.power_rule()
 solverObject.substitution()
 solverObject.sum(solverObject.list_without_power_rule_operation)
+print solverObject.sum_call_counter
 solverObject.sum(solverObject.new_list)
 solverObject.Newtons_method()
 
