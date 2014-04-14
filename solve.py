@@ -25,10 +25,11 @@ class Solver:
 		self.args = argv
 
 		self.sum_call_counter = 1
+		self.power_rule_counter = 1
 
 	#power_rule method is used on coeffcient/power pairs, ex. elements 
 	#at indexes (1,2),(3,4), etc.	
-	def power_rule(self):
+	def power_rule/substitution(self):
 		print "power_rule output:\n"
 		self.o = complex()
 		#For results of power_rule. 0 is a placeholder in this list
@@ -53,10 +54,16 @@ class Solver:
 				print "n is ", n
 				print "This power is", float(self.args[n]) - 1
 				
+				#the call is odd
+				if self.power_rule_counter % 2 != 0
 				#power * (corresponding coefficient * guess ^ (power - 1))
 				#convert list elements to integers
 				self.o = float(self.args[n]) * ( float(self.args[n-1]) * 
 				self.guess ** ( float(self.args[n]) - 1 ) ) 
+				
+				#substitution, no power rule operation
+				self.y = float( self.args[n-1] ) * self.guess ** ( 
+				float( self.args[n] ) )
 				
 				x += 1
 				#Power elements
@@ -68,11 +75,11 @@ class Solver:
 				#back to the while loop and append each result into
 				#new_list.
 				break
-		#TODO: string formatting for lists?
 		print "new_list is\n", self.new_list
 	
 	#Doesn't apply power_rule operation just substitutes self.guess into the
 	#original coefficients and corresponding powers (argv).
+	"""
 	def substitution(self):
 		print "substitution output:\n"
 		self.y = complex()
@@ -109,6 +116,7 @@ class Solver:
 				#new_list.				
 				break
 		print "substitution list is\n", self.list_without_power_rule_operation
+	"""
 	
 	
 	#This sums all the elements in list_without_power_rule_operation and
@@ -208,10 +216,6 @@ class Solver:
 
 #TODO: power_rule and substitution methods are very similar, should substitution
 #just be another power_rule method call?
-
-#Potential formatting for complex numbers
-#n = 3 + 4j
-#print "This complex number is %f + %fj" % (n.real, n.imag)
 
 solverObject = Solver(sys.argv)
 solverObject.power_rule()
