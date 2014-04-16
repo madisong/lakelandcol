@@ -38,12 +38,12 @@ class Solver:
 		x = 1
 		#initial n value
 		n = 2
-		print "power_rule_substitution output:\n"
-		print "The initial power counter value is\n", self.power_rule_counter
-		if self.power_rule_counter % 2 == 0:
-			print "The counter is even and:\n"
-			print "x is",x
-			print "n is", n
+		#print "power_rule_substitution output:\n"
+		#print "The initial power counter value is\n", self.power_rule_counter
+		#if self.power_rule_counter % 2 == 0:
+		#	print "The counter is even and:\n"
+		#	print "x is",x
+		#	print "n is", n
 		#Subtract initial argument, the program name, and divide it
 		#by 2 to get the correct iterations
 		argcounter = (len(self.args) - 1) / 2
@@ -55,12 +55,13 @@ class Solver:
 			if argcounter == 0:
 				break
 			for arg in self.args:
-			
-				print "p is", complex(self.args[n])
-				print "c is", complex(self.args[n-1])
-				print "x is", x
+				
+				#print "p is", complex(self.args[n])
+				#print "c is", complex(self.args[n-1])
+				#print "x is", x
 				print "n is ", n				
 				#the call is odd
+				
 				if self.power_rule_counter % 2 != 0:
 					#power rule operation
 					#power * (corresponding coefficient * guess ^ (power - 1))
@@ -81,21 +82,21 @@ class Solver:
 				#Power elements
 				n = 2*x
 				argcounter -= 1
-				print "argcounter is %d" % argcounter
+		#		print "argcounter is %d" % argcounter
 				#print "result is", self.o
 				#When  the result is computed, break the for loop, go
 				#back to the while loop and append each result into
 				#new_list.
 				break
 		print "The new value is\n", self.power_rule_counter
-		print "new_list is\n", self.new_list
+		#print "new_list is\n", self.new_list
 		
 		#This is supposed to prevent an infinite loop from occuring, while
 		#allowing self.power_rule_substitution to be called a second time.
 		if self.power_rule_counter % 2 != 0:
 			self.power_rule_counter += 1
 			self.power_rule_substitution()
-			print "substitution list is", self.list_without_power_rule_operation
+			#print "substitution list is", self.list_without_power_rule_operation
 		else:
 			self.power_rule_counter += 1
 	#Doesn't apply power_rule operation just substitutes self.guess into the
@@ -141,11 +142,11 @@ class Solver:
 	#sums all the elements in new_list.
 	def sum(self, data_list):
 
-		print "sum method output:\n"
+		#print "sum method output:\n"
 		#print "list_without_operation is", data_list		
 		a = 2
 		n = len(data_list) - 1
-		print "initial n is %d" % n
+		#print "initial n is %d" % n
 		#Add the first two elements.
 		#complex is used because you could have complex numbers as input and
 		#the elements must be converted from strings.
@@ -155,16 +156,16 @@ class Solver:
 		print "the initial sum is", sum
 		while a <= n:
 			a += 1
-			print "a is %d" % a	
+			print "a is %d in sum" % a	
 			#When a = n, then a = a+1, which is out of the list range. 
 			#This prevents it from erroring.
 			if a > n:
-				print "a is greater than n"
+				print "a is greater than n in sum"
 				break
-			print "a is %d" % a
+			#print "a is %d" % a
 			sum = ( sum + complex(data_list[a]) )
 			
-			print "the current sum is \n", sum
+			#print "the current sum is \n", sum
 
 		#print "This is", self.sum_call_counter % 2
 		#when self.sum_call_counter is odd
@@ -178,7 +179,7 @@ class Solver:
 			print "b is even", self.sum_call_counter
 			self.new_list_sum = sum
 			self.sum_call_counter += 1
-		print "The final sum is \n", sum
+		#print "The final sum is \n", sum
 
 	#Applys the mathematical process called "Newton's method"
 	#Finds the zeros correctly, but the guess MUST be near the zero. If two
@@ -205,7 +206,7 @@ class Solver:
 			#self.substitution()
 			self.sum(self.list_without_power_rule_operation)
 			self.sum(self.new_list)
-			print "Continuation of Newton's method Output:\n"
+		#	print "Continuation of Newton's method Output:\n"
 			print "The new self.guess is", self.guess
 			continue
 
