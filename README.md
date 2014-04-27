@@ -1,7 +1,7 @@
 lakelandcol
 ===========
-This is for a program called "Collin's solver", written by Collin Lakeland in
-Python.
+This is for a program called "Collin's polynomial solver", written by 
+Collin Lakeland in Python.
  .........
 To use this program in a productive way (this is NOT guaranteed by the
 developer) the user must SET THE EQUATION EQUAL TO ZERO, otherwise the SOLVER 
@@ -42,6 +42,13 @@ to the guess.
 
 Also, if the zero is complex (contains i), then your guess must also be complex,
 for a real guess is not close to a complex guess.
+
+To make sure you never obtain an erroneous solution, make sure your guess is not
+a pure imaginary number. (i.e. 3j, 5j) Make sure it has a real part to it, like
+3j+4.
+
+NOTE: A guess of j (= i) would be input as 1j; the 1 signifies that it is a
+complex number and not a string.
 
 I DO NOT ENDORSE OR SUPPORT USING THIS AS A CRUTCH IN MATH CLASS, IN FACT 
 I DESPISE IT. SOLVE YOUR OWN PROBLEMS! ATTEMPT TO USE THIS PROGRRAM TO AID 
