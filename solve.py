@@ -217,8 +217,8 @@ class Solver:
 			print "The coefficients are:\n", self.args[self.i]
 			if complex(self.args[self.i]).imag != 0:
 				print "Not all coeffcients are real\n"
-				#self.return_value = 1
 				return 1
+				self.return_value = 1
 			else:
 				print "All coeffcients are real"
 				self.argcounter -= 1
@@ -256,7 +256,7 @@ class Solver:
 		#supress the output?
 		#if self.complex_conjugate() != 1 and self.solutions % 2 != 0:
 			print ("There are %d complex roots total, and at least 1 of them is"
-			"real." % self.solutions)
+			" real." % self.solutions)
 		else:
 			print ("I don't know how many real roots there are, but there are\n"
 			"%d complex roots total.") % self.solutions
