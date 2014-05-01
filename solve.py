@@ -34,6 +34,15 @@ class Solver:
 		self.new_list = [0]
 		self.list_without_power_rule_operation = [0]
 		self.powers = []
+		
+		self.power_rule_substitution()
+		self.sum_method(self.list_without_power_rule_operation)
+		self.sum_method(self.new_list)
+		self.Newtons_method()
+		self.solution_tester()
+		self.polynomial_checker()
+		self.complex_conjugate()
+		self.number_of_roots()
 
 	#power_rule operation is used on coeffcient/power pairs, ex. elements 
 	#at indexes (1,2),(3,4), etc.
@@ -68,8 +77,9 @@ class Solver:
 					#String formatting is not used for results, because there
 					#is no formatting for complex numbers.
 					self.o = complex(self.args[self.i]) * (
-					( complex(self.args[self.i-1]) * self.guess ** 
-					( complex(self.args[self.i]) - 1 ) ) )
+						complex(self.args[self.i-1]) * self.guess ** 
+						complex(self.args[self.i]) - 1 )
+					
 					print "self.o is", self.o
 					self.new_list.append(self.o)
 
@@ -77,7 +87,8 @@ class Solver:
 				if self.power_rule_counter % 2 == 0:
 					#Substitution, no power rule operation.
 					self.y = complex( self.args[self.i-1] ) * self.guess ** ( 
-					complex( self.args[self.i] ) )
+						complex( self.args[self.i] ) )
+					
 					print "self.y is", self.y
 					self.list_without_power_rule_operation.append(self.y)
 				x += 1
@@ -203,7 +214,7 @@ class Solver:
 			#Uses the Fundamental Theorem of Algebra to tell the user how many
 			#roots there are.
 			self.solutions = max(self.powers)
-	#Uses the complex conjugate theorem: if a + b*j is a root, then a - b*j 
+	#Uses the complex conjugate theorem: if a + b*j is a root, then a - b*j
 	#is also a root.
 	def complex_conjugate(self):
 		print "CONJUGATE OUTPUT:\n"
@@ -217,8 +228,10 @@ class Solver:
 			print "The coefficients are:\n", self.args[self.i]
 			if complex(self.args[self.i]).imag != 0:
 				print "Not all coeffcients are real\n"
-				return 1
+				print "GIANT STUPID"
 				self.return_value = 1
+				return 1
+				print "stuff"
 			else:
 				print "All coeffcients are real"
 				self.argcounter -= 1
@@ -280,13 +293,13 @@ class Solver:
 		print "The sum is", self.sum
 		#If both the real and imaginary parts of the sum are between a very
 		#small negative number and a very small positive number.
-		if ( ( -10**-10 < self.sum.real < 10**-10 ) and
+		if ( ( -2**-5 <= self.sum.real <= 2**-5 ) and
 		
-		 ( -10**-10 < self.sum.imag < 10**-10 ) ):
+		 ( -2**-5 <= self.sum.imag <= 2**-5 ) ):
 		
-			print "This is a valid solution"
+			print "VALID SOLUTION"
 		else:
-			print ( "The program is lieing to you. Try another guess.\n"
+			print ( "The program is lying to you. Try another guess.\n"
 			"Maybe make it complex (e.g. of the form a+bj)" )
 			sys.exit()
 #The arguments 1 2 1 0 give ZeroDivisionError when the guess = 1, but works
@@ -301,15 +314,8 @@ class Solver:
 #GIVE FALSE SOLUTIONS.
 
 #TODO: do not forget about the complex conjugate theorem for rational roots
+
 solverObject = Solver(sys.argv)
-solverObject.power_rule_substitution()
-solverObject.sum_method(solverObject.list_without_power_rule_operation)
-solverObject.sum_method(solverObject.new_list)
-solverObject.Newtons_method()
-solverObject.solution_tester()
-solverObject.polynomial_checker()
-solverObject.complex_conjugate()
-solverObject.number_of_roots()
 #Pseudocode
 
 """
