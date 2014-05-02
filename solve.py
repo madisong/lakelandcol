@@ -214,12 +214,13 @@ class Solver:
 			#Uses the Fundamental Theorem of Algebra to tell the user how many
 			#roots there are.
 			self.solutions = max(self.powers)
+			
 	#Uses the complex conjugate theorem: if a + b*j is a root, then a - b*j
 	#is also a root.
 	def complex_conjugate(self):
 		print "CONJUGATE OUTPUT:\n"
 		#Checks whether all of the coefficients are real, if not, this method
-		#doesn't apply.
+		#and a condition in number_of_roots doesn't apply.
 		self.return_value = int()
 		self.i = 1
 		m = 0
@@ -228,10 +229,8 @@ class Solver:
 			print "The coefficients are:\n", self.args[self.i]
 			if complex(self.args[self.i]).imag != 0:
 				print "Not all coeffcients are real\n"
-				print "GIANT STUPID"
 				self.return_value = 1
 				return 1
-				print "stuff"
 			else:
 				print "All coeffcients are real"
 				self.argcounter -= 1
@@ -299,7 +298,7 @@ class Solver:
 		
 			print "VALID SOLUTION"
 		else:
-			print ( "The program is lying to you. Try another guess.\n"
+			print ( "THE PROGRAM IS LYING TO YOU. Try another guess.\n"
 			"Maybe make it complex (e.g. of the form a+bj)" )
 			sys.exit()
 #The arguments 1 2 1 0 give ZeroDivisionError when the guess = 1, but works
@@ -314,6 +313,8 @@ class Solver:
 #GIVE FALSE SOLUTIONS.
 
 #TODO: do not forget about the complex conjugate theorem for rational roots
+
+#TODO: method to default to zero when root is very small
 
 solverObject = Solver(sys.argv)
 #Pseudocode
