@@ -1,4 +1,4 @@
-#Written By Collin Lakeland.
+#poopy buttsWritten By Collin Lakeland.
 
 #This is a program to solve any equation using Newton's Method.
 
@@ -36,18 +36,6 @@ class Solver:
 		self.list_without_power_rule_operation = [0]
 		self.powers = []
 		
-		self.power_rule_substitution()
-		self.sum_method(self.list_without_power_rule_operation)
-		self.sum_method(self.power_rule_list)
-		self.Newtons_method()
-		self.solution_tester()
-		self.approximate()
-		if self.reprompt() == 0:
-			self.polynomial_checker()
-		self.complex_conjugate()
-		self.number_of_roots()
-		self.reprompt()
-
 	#power_rule operation is used on coeffcient/power pairs, ex. elements 
 	#at indexes (1,2),(3,4), etc.
 	def power_rule_substitution(self):
@@ -111,6 +99,7 @@ class Solver:
 		#time.sleep(2)
 		if self.power_rule_counter % 2 != 0:
 			#Do not change the order.
+			
 			self.power_rule_counter += 1
 			self.power_rule_substitution()
 		else:
@@ -153,6 +142,7 @@ class Solver:
 			self.sum_call_counter += 1
 		print "The final sum is \n", self.sum
 		print
+
 	#Applys the mathematical process called "Newton's method"
 	#Finds the zeros correctly, but the guess MUST be near the zero. If two
 	#zeros are 2 and -2, and the guess is 1, then it will give a solution of 2.
@@ -262,7 +252,7 @@ class Solver:
 	def number_of_roots(self):
 		print "ROOT_NUMBER OUTPUT:\n"
 		#If the reprompt hasn't been called yet.
-		if self.reprompt() != 0:
+		if self.reprompt() ==  None:
 			#Uses the Fundamental Theorem of Algebra to tell the user how many
 			#roots there are.
 			self.solutions = max(self.powers)
@@ -354,6 +344,18 @@ class Solver:
 #TODO: reprompt method is causing big problems
 
 solverObject = Solver(sys.argv)
+
+solverObject.power_rule_substitution()
+solverObject.sum_method(solverObject.list_without_power_rule_operation)
+solverObject.sum_method(solverObject.power_rule_list)
+solverObject.Newtons_method()
+solverObject.solution_tester()
+#solverObject.approximate()
+solverObject.polynomial_checker()
+solverObject.complex_conjugate()
+solverObject.number_of_roots()
+print "THE NUMBER OF SOLUTIONS IS", solverObject.solutions
+solverObject.reprompt()
 #Pseudocode
 
 """
