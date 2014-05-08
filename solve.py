@@ -142,6 +142,13 @@ class Solver:
 			self.sum_call_counter += 1
 		print "The final sum is \n", self.sum
 		print
+		
+	def iterate(self):		
+		#Repeat the process.
+		#Parenthesis calls the method; it will not work without it.
+		self.power_rule_substitution()
+		self.sum_method(self.list_without_power_rule_operation)
+		self.sum_method(self.power_rule_list)
 
 	#Applys the mathematical process called "Newton's method"
 	#Finds the zeros correctly, but the guess MUST be near the zero. If two
@@ -156,23 +163,17 @@ class Solver:
 			self.guess = ( self.guess - 
 			(self.substitution_list_sum/self.power_rule_list_sum) )
 			n += 1
+			#Repeat the process using the new self.guess, do this 1001 times
+			#for a high degree of accuracy.
+			self.iterate()
 			#Reset the lists after an iteration of Newton's_method
 			self.power_rule_list = [0]
 			self.list_without_power_rule_operation = [0]
 			print "newton_counter IS %d" % n
 			print "The new self.guess is", self.guess
-
 			#time.sleep(2)
-			#Repeat the process using the new self.guess, do this 1001 times
-			#for a high degree of accuracy.
-			#Parenthesis calls the method; it will not work without it.
-			self.power_rule_substitution()
-			self.sum_method(self.list_without_power_rule_operation)
-			self.sum_method(self.power_rule_list)
 		#The single result of Newton's
-		print "THE REAL PART OF THE RESULT IS,", (self.guess.real)
-		print "THE IMAG PART OF THE RESULT IS,", (self.guess.imag)
-		print "THE FINAL RESULT OF NEWTON'S METHOD IS:", self.guess, type(self.guess)
+		print "THE FINAL RESULT OF NEWTON'S METHOD IS:", self.guess
 		print
 	#If the input entered doesn't correspond to a polynomial, then all of 
 	#the following methods, except solution_tester, do not apply.
@@ -223,14 +224,19 @@ class Solver:
 				print "Not all coeffcients are real\n"
 				self.return_value = 1
 				return 1
-			else:
-				print "All coeffcients are real"
-				self.argcounter -= 1
-				if self.argcounter == 0:
-					break
-				m += 1
-				#self.i is always odd
-				self.i = 2*m + 1	
+			self.argcounter -= 1
+			if self.argcounter == 0:
+				break
+			m += 1
+			#self.i is always odd
+			self.i = 2*m + 1
+		print "All coeffcients are real"
+				#self.argcounter -= 1
+				#if self.argcounter == 0:
+					#break
+				#m += 1
+				##self.i is always odd
+				#self.i = 2*m + 1	
 		if self.guess.real == 0 or -1e-6 < self.guess.real < 1e-6:
 			print "This is a pure imaginary answer\n"
 			print "The answer is", self.guess
@@ -251,14 +257,19 @@ class Solver:
 
 	def number_of_roots(self):
 		print "ROOT_NUMBER OUTPUT:\n"
+		#self.solutions = max(self.powers)
 		#If the reprompt hasn't been called yet.
-		if self.reprompt() ==  None:
-			#Uses the Fundamental Theorem of Algebra to tell the user how many
-			#roots there are.
+		if self.reprompt_value ==  1:			
 			self.solutions = max(self.powers)
+
+		#Uses the Fundamental Theorem of Algebra to tell the user how many
+		#roots there are.
 		#If it has, subtract 1 from the number of solutions left.
 		else:
+			print "self.reprompt does not = None"
+
 			self.solutions -= 1
+		
 		#If the leading power of a polynomial is odd and it has real 
 		#coefficients, then it has at least one real root.
 		
@@ -309,18 +320,31 @@ class Solver:
 	def approximate(self):
 		if -1e-6 < (self.guess.real) < 1e-6 and -1e-6 < (self.guess.imag) < 1e-6:
 			self.guess = 0
-			print "SELF.GUESS WAS APPROXIMATED"
+			print "SELF.GUESS WAS APPROXIMATED IT NOW EQUALS", self.guess
 		elif -1e-6 < (self.guess.real) < 1e-6:
-			self.guess.real = 0
-			print "SELF.GUESS.REAL WAS APPROXIMATED"
+			#This type of reassignment prevents TypeErrors
+			self.guess = complex(0, self.guess.imag)
+			print "SELF.GUESS.REAL WAS APPROXIMATED IT IS", self.guess.real
 		elif -1e-6 < (self.guess.imag) < 1e-6:
-			print "SELF.GUESS.IMAG WAS APPROXIMATED"
-	
+			self.guess = complex(self.guess.real, 0)
+			print "SELF.GUESS.IMAG WAS APPROXIMATED IT IS", self.guess.imag
+
 	def reprompt(self):
 		while self.solutions > 0:
-			self.__init__(self, argv)
+			self.__init__(self)
+			#Call iterate to do the essential operations for Newton's method.
+			self.iterate()
+			#Call Newton's method to continue the process with the newly created
+			#data.
+			self.Newtons_method()
 			self.solutions -= 1
-			return 0
+			self.reprompt_value = 0
+			
+	#This is a work around; it sets variables that will only change once and
+	#never again.
+	def setter(self):
+		self.reprompt_value = 1
+
 
 
 #The arguments 1 2 1 0 give ZeroDivisionError when the guess = 1, but works
@@ -339,22 +363,22 @@ class Solver:
 
 #TODO: do not forget about the complex conjugate theorem for rational roots
 
-#TODO: approximate method gives TypeErrors
-
 #TODO: reprompt method is causing big problems
 
 solverObject = Solver(sys.argv)
 
+solverObject.setter()
 solverObject.power_rule_substitution()
 solverObject.sum_method(solverObject.list_without_power_rule_operation)
 solverObject.sum_method(solverObject.power_rule_list)
 solverObject.Newtons_method()
 solverObject.solution_tester()
-#solverObject.approximate()
-solverObject.polynomial_checker()
-solverObject.complex_conjugate()
+solverObject.approximate()
+#if reprompt hasn't been called yet
+if solverObject.reprompt_value == 1:
+	solverObject.polynomial_checker()
+	solverObject.complex_conjugate()
 solverObject.number_of_roots()
-print "THE NUMBER OF SOLUTIONS IS", solverObject.solutions
 solverObject.reprompt()
 #Pseudocode
 
