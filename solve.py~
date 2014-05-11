@@ -331,12 +331,11 @@ class Solver:
 					else:
 						answers_return_value = 0
 					i += 1
-					#if it is going to evaluate the same element, break the loop
+					#if self.answers[i] is equal to self.answers[-1]
 					if i == len(self.answers) - 1:
 						break
-			#if the newly appended answer is unique, subtract 1 from the number
-			#of solutuions
 			if answers_return_value == 0:
+				print "Do stuff"	
 				self.solutions -= 1
 			if self.solutions == 0:
 				break
@@ -355,13 +354,13 @@ class Solver:
 			self.solution_tester()
 			self.approximate()
 			self.answer_spitter()
-			
 	#This is a work around; it sets variables that will only change once and
 	#never again.
 	def setter(self):
 		self.reprompt_value = 1
 		self.answers = []
 
+	
 	def answer_spitter(self):
 		if self.guess.real == 0 or -1e-6 < self.guess.real < 1e-6:
 			print "This is a pure imaginary answer\n"
@@ -378,6 +377,7 @@ class Solver:
 		else:
 			print ("This solution doesn't have an imaginary part, so it has no\n"
 			"conjugate answer.")
+
 
 
 #The arguments 1 2 1 0 give ZeroDivisionError when the guess = 1, but works
