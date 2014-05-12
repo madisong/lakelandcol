@@ -300,9 +300,6 @@ class Solver:
 		elif -1e-6 < (self.guess.imag) < 1e-6:
 			self.guess = complex(self.guess.real, 0)
 			print "SELF.GUESS.IMAG WAS APPROXIMATED IT IS", self.guess.imag
-
-		self.answers.append(self.guess)
-		print self.answers
 	
 	def iterate(self):		
 		#Repeat the process.
@@ -315,34 +312,23 @@ class Solver:
 		#Initially, subtract 1 from the number of solutions, because the length 
 		#of self.answers is less than or equal to 1, and at this point one
 		#solution has been found.
-		self.solutions -= 1
+		
+		#self.solutions -= 1
 		self.reprompt_value = 0
 		answers_return_value = None
 		while self.solutions > 0:
-			i = 0
-			if len(self.answers) > 1:					
-				for answer in self.answers:
-					#if the newly appended answer is not unique, remove it
-					#self.answers[-1] is the last element in a list
-					if self.answers[i] == self.answers[-1]:
-						print "The element", self.answers[-1], "will now be removed"
-						self.answers.remove(self.answers[-1])
-						answers_return_value = 1
-						print self.answers						
-					else:
-						answers_return_value = 0
-					i += 1
-					#if it is going to evaluate the same element, break the loop
-					if i == len(self.answers) - 1:
-						print "It broke; it was going to evaluate itself"
-						break
-			#if the newly appended answer is unique, subtract 1 from the number
-			#of solutuions
+			if self.answers.count(self.guess) == 0:
+				print "That is a new solution"
+				self.answers.append(self.guess)
+				print "the answers list is", self.answers
+				answers_return_value = 0
+			else:
+				print "That solution has already been found,\n so it will not be added to self.answers"
+				answers_return_value = 1
+				print "the answers list is", self.answers
 			if answers_return_value == 0:
 				self.solutions -= 1
-			if self.solutions == 0:
-				break
-
+				
 			print "REPROMPT OUTPUT:\n"
 			print "There are %d solutions left\n" % self.solutions
 			#Calling __init__ resets values.
@@ -402,8 +388,6 @@ class Solver:
 
 #TODO reprompt isn't subtracting from the number of solutions when it should
 
-#TODO: method to print every unique solution, when all are found
-
 #TODO: how to find double roots?
 
 solverObject = Solver(sys.argv)
@@ -452,3 +436,36 @@ Repeat this process until all solutions are found    If the highest degree is an
 print "Your solutions are:", solution1, solution2, solution3....solution-N  **Possibly in a column**
 
 """
+
+
+
+#Useless code, right now:
+			"""
+			i = 0
+			if len(self.answers) > 1:
+				print "PRE-REPROMPT OUTPUT:\n	"
+				for answer in self.answers:
+					#if the newly appended answer is not unique, remove it
+					#self.answers[-1] is the last element in a list
+					if self.answers[i] =! self.answers[-1]:
+						answers_return_value = 0
+						print "self.answers returned 0", answers_return_value				
+					else:
+						answers_return_value = 1
+						print "answers returned", answers_return_value
+						print "The element", self.answers[-1], "will now be removed"
+						self.answers.remove(self.answers[-1])
+						print self.answers
+					i += 1
+					#if it is going to evaluate the same element, break the loop
+					if i == len(self.answers) - 1:
+						print "The for loop broke; it was going to evaluate itself"
+						break
+			#if the newly appended answer is unique, subtract 1 from the number
+			#of solutuions
+			if answers_return_value == 0:
+				self.solutions -= 1
+			if self.solutions == 0:
+				print "self.solutions equals", self.solutions
+				break
+			"""
