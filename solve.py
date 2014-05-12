@@ -140,7 +140,7 @@ class Solver:
 			print "sum_counter is even %d" % self.sum_call_counter
 			self.power_rule_list_sum = self.sum
 			self.sum_call_counter += 1
-		print "The final sum is \n", self.sum
+		print "The final sum is \n {} \n".format(self.sum)
 		print
 
 
@@ -327,12 +327,14 @@ class Solver:
 					if self.answers[i] == self.answers[-1]:
 						print "The element", self.answers[-1], "will now be removed"
 						self.answers.remove(self.answers[-1])
+						answers_return_value = 1
 						print self.answers						
 					else:
 						answers_return_value = 0
 					i += 1
 					#if it is going to evaluate the same element, break the loop
 					if i == len(self.answers) - 1:
+						print "It broke; it was going to evaluate itself"
 						break
 			#if the newly appended answer is unique, subtract 1 from the number
 			#of solutuions
