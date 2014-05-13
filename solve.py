@@ -1,11 +1,10 @@
-#Damn you KanonWritten By Collin Lakeland.
+#Damn you Kanon Written By Collin Lakeland.
 
 #This is a program to solve any equation using Newton's Method.
 
 #division module makes it so division operator doesn't round the  quotient
 from __future__ import division
-#math module needed for ceiling and floor functions, which aren't in cmath
-import math
+import sys
 #cmath module allows for complex operations and solutions
 import cmath
 import time
@@ -38,7 +37,7 @@ class Solver:
 	#at indexes (1,2),(3,4), etc.
 	def power_rule_substitution(self):
 		print "POWER RULE OUTPUT\n"
-		print "THE LENGTH OF ARGV IS", len(self.args)
+		print "THE LENGTH OF ARGV IS {0}".format( len(self.args) )
 		x = 1
 		#Initial index value
 		self.i = 2
@@ -69,7 +68,7 @@ class Solver:
 						complex(self.args[self.i-1]) * self.guess ** 
 						(complex(self.args[self.i]) - 1 ) )
 					
-					print "self.o is", self.o
+					print "self.o is {0}".format(self.o)
 					self.power_rule_list.append(self.o)
 
 				#The call is even.
@@ -78,7 +77,7 @@ class Solver:
 					self.y = complex( self.args[self.i-1] ) * self.guess ** ( 
 						complex( self.args[self.i] ) )
 					
-					print "self.y is", self.y
+					print "self.y is {0}".format(self.y)
 					self.list_without_power_rule_operation.append(self.y)
 				x += 1
 				#Power elements
@@ -139,7 +138,7 @@ class Solver:
 			print "sum_counter is even %d" % self.sum_call_counter
 			self.power_rule_list_sum = self.sum
 			self.sum_call_counter += 1
-		print "THE FINAL SUM IS \n {0} \n".format(self.sum)
+		print "THE FINAL SUM IS \n {0}".format(self.sum)
 		print
 
 
@@ -163,10 +162,10 @@ class Solver:
 			self.power_rule_list = [0]
 			self.list_without_power_rule_operation = [0]
 			print "newton_counter IS %d" % n
-			print "The new self.guess is", self.guess
+			print "The new self.guess is {0}".format(self.guess)
 			#time.sleep(5)
 		#The single result of Newton's
-		print "THE FINAL RESULT OF NEWTON'S METHOD IS:", self.guess
+		print "THE FINAL RESULT OF NEWTON'S METHOD IS: {0}".format(self.guess)
 		print
 	#If the input entered doesn't correspond to a polynomial, then all of 
 	#the following methods, except solution_tester, do not apply.
@@ -183,7 +182,7 @@ class Solver:
 			self.argcounter -= 1
 			if self.argcounter == 0:
 				break
-		print "powers is", self.powers
+		print "powers is {0}".format(self.powers)
 		#Gives the numbers after the decimal point, if any. In other words,
 		#determines if the number is an integer in the mathematical sense,
 		#Using int() on any float just cuts off the decimal portion 
@@ -191,7 +190,7 @@ class Solver:
 		for elements in self.powers:
 			#print "Integer is", int(powers[b])
 			a = self.powers[b] - int(self.powers[b])
-			print "a is", a
+			print "a is {0}".format(a)
 			#The key piece of logic.
 			if (self.powers[b] < 0 or a != 0.0 or type(self.powers[b])
 			== complex):
@@ -212,7 +211,7 @@ class Solver:
 		m = 0
 		self.argcounter = (len(self.args) - 1 )/2
 		while self.argcounter >= 0:
-			print "The coefficients are:\n", self.args[self.i]
+			print "The coefficients are:{0} \n".format(self.args[self.i])
 			if complex(self.args[self.i]).imag != 0:
 				print "Not all coeffcients are real\n"
 				self.conjugate_value = 1
@@ -224,12 +223,6 @@ class Solver:
 			#self.i is always odd
 			self.i = 2*m + 1
 		print "All coeffcients are real."
-				#self.argcounter -= 1
-				#if self.argcounter == 0:
-					#break
-				#m += 1
-				##self.i is always odd
-				#self.i = 2*m + 1
 
 	def number_of_roots(self):
 		print "ROOT_NUMBER OUTPUT:\n"
@@ -244,7 +237,6 @@ class Solver:
 		#If the leading power of a polynomial is odd and it has real 
 		#coefficients, then it has at least one real root.
 		
-		#Better way to do this?
 		if self.conjugate_value != 1 and self.solutions % 2 != 0:
 		#I know I could have the condition like this, but is there anyway to
 		#supress the output?
@@ -266,12 +258,12 @@ class Solver:
 		#will always be 2005. Add 1 to it so when power_rule_substitution 
 		#is called the final self.guess is substituted in.
 		self.power_rule_counter += 1
-		print "Now the counter is", self.power_rule_counter
+		print "Now the counter is {0}".format(self.power_rule_counter)
 		#Cleaner way of doing this?
 		self.list_without_power_rule_operation = [0]
 		self.power_rule_substitution()
 		self.sum_method(self.list_without_power_rule_operation)
-		print "The sum is", self.sum
+		print "The sum is {0}".format(self.sum)
 		#If both the real and imaginary parts of the sum are between a very
 		#small negative number and a very small positive number.
 		#e(number), in this case, is equivalent to 10**number.
@@ -289,16 +281,21 @@ class Solver:
 	#If both parts of the solution or one part are tiny, then they default to 
 	#zero.
 	def approximate(self):
-		if -1e-6 < (self.guess.real) < 1e-6 and -1e-6 < (self.guess.imag) < 1e-6:
+		if ( -1e-6 < (self.guess.real) < 1e-6 and 
+			-1e-6 < (self.guess.imag) < 1e-6 ):
+			
 			self.guess = 0
-			print "SELF.GUESS WAS APPROXIMATED IT NOW EQUALS", self.guess
+			print ( "SELF.GUESS WAS APPROXIMATED IT NOW EQUALS {0}"
+			.format(self.guess) )
 		elif -1e-6 < (self.guess.real) < 1e-6:
-			#This type of reassignment prevents TypeErrors
+			#This type of reassignment prevents TypeErrors.
 			self.guess = complex(0, self.guess.imag)
-			print "SELF.GUESS.REAL WAS APPROXIMATED IT IS", self.guess.real
+			print ( "SELF.GUESS.REAL WAS APPROXIMATED IT IS {0}"
+			.format(self.guess.real) )
 		elif -1e-6 < (self.guess.imag) < 1e-6:
 			self.guess = complex(self.guess.real, 0)
-			print "SELF.GUESS.IMAG WAS APPROXIMATED IT IS", self.guess.imag
+			print ( "SELF.GUESS.IMAG WAS APPROXIMATED IT IS {0}"
+			.format(self.guess.imag) )
 	
 	def iterate(self):		
 		#Repeat the process.
@@ -318,22 +315,22 @@ class Solver:
 			if self.answers.count(self.guess) == 0:
 				print "That is a new solution"
 				self.answers.append(self.guess)
-				print "the answers list is", self.answers
+				print "The answers list is {0}".format(self.answers)
 				self.solutions -= 1
 
 			else:
-				print "That solution has already been found,\n so it will not be added to self.answers"
-				print "the answers list is", self.answers
+				print ("That solution has already been found,\n"
+				"so it will not be added to self.answers")
+				print "the answers list is {0}".format(self.answers)
 
 			print "REPROMPT OUTPUT:\n"
 			print "There are %d solutions left\n" % self.solutions
 			#Calling __init__ resets values.
-			#Why must I pass sys.argv and not argv?
 			self.__init__(sys.argv)
 			#Call iterate to do the essential operations for Newton's method 
 			#again.
 			self.iterate()
-			#Call Newton's method to work with then newly created data, and call
+			#Call Newton's method to work with the newly created data, and call
 			#iterate a thousand more times.
 			self.Newtons_method()
 			self.solution_tester()
@@ -347,21 +344,22 @@ class Solver:
 		self.answers = []
 
 	def answer_spitter(self):
-		if self.guess.real == 0 or -1e-6 < self.guess.real < 1e-6:
-			print "This is a pure imaginary answer\n"
-			print "The answer is", self.guess
-			print "and the conjugate answer is", -1*self.guess
-			print
+		if self.guess.imag != 0 or self.guess.real > -1e-6:
+			#print "This is a pure imaginary answer\n"
+			print "The answer is {0}".format(self.guess)
+			print "and the conjugate answer is {0} \n".format( -1*self.guess)
 		else:
-			print "This is a complex answer\n"
-			print "The answer is", self.guess
+			print ("This solution doesn't have an imaginary part, so it has"
+			"no\n conjugate answer.")
+		
+		#else:
+			#print "This is a complex answer\n"
+			#print "The answer is {0}".format(self.guess)
+		
 		#self.guess.imag could or could not equal zero here
 		if self.guess != (self.guess.real + self.guess.imag*-1j):
-			print "and the conjugate answer is", ( self.guess.real + 
+			print "and the conjugate answer is {0}".format( self.guess.real + 
 			self.guess.imag*-1j )
-		else:
-			print ("This solution doesn't have an imaginary part, so it has no\n"
-			"conjugate answer.")
 
 
 #The arguments 1 2 1 0 give ZeroDivisionError when the guess = 1, but works
@@ -386,7 +384,7 @@ class Solver:
 
 #TODO: how to find double roots?
 
-solverObject = Solver(argv)
+solverObject = Solver(sys.argv)
 
 solverObject.setter()
 """
