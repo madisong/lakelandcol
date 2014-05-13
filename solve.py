@@ -1,4 +1,4 @@
-#poopy buttsWritten By Collin Lakeland.
+#Damn you KanonWritten By Collin Lakeland.
 
 #This is a program to solve any equation using Newton's Method.
 
@@ -8,7 +8,6 @@ from __future__ import division
 import math
 #cmath module allows for complex operations and solutions
 import cmath
-import sys
 import time
 
 #The imaginary number i = (-1)^0.5 = j in Python.
@@ -140,7 +139,7 @@ class Solver:
 			print "sum_counter is even %d" % self.sum_call_counter
 			self.power_rule_list_sum = self.sum
 			self.sum_call_counter += 1
-		print "The final sum is \n {} \n".format(self.sum)
+		print "THE FINAL SUM IS \n {0} \n".format(self.sum)
 		print
 
 
@@ -315,20 +314,17 @@ class Solver:
 		
 		#self.solutions -= 1
 		self.reprompt_value = 0
-		answers_return_value = None
 		while self.solutions > 0:
 			if self.answers.count(self.guess) == 0:
 				print "That is a new solution"
 				self.answers.append(self.guess)
 				print "the answers list is", self.answers
-				answers_return_value = 0
+				self.solutions -= 1
+
 			else:
 				print "That solution has already been found,\n so it will not be added to self.answers"
-				answers_return_value = 1
 				print "the answers list is", self.answers
-			if answers_return_value == 0:
-				self.solutions -= 1
-				
+
 			print "REPROMPT OUTPUT:\n"
 			print "There are %d solutions left\n" % self.solutions
 			#Calling __init__ resets values.
@@ -390,7 +386,7 @@ class Solver:
 
 #TODO: how to find double roots?
 
-solverObject = Solver(sys.argv)
+solverObject = Solver(argv)
 
 solverObject.setter()
 """
@@ -440,7 +436,7 @@ print "Your solutions are:", solution1, solution2, solution3....solution-N  **Po
 
 
 #Useless code, right now:
-			"""
+"""
 			i = 0
 			if len(self.answers) > 1:
 				print "PRE-REPROMPT OUTPUT:\n	"
@@ -468,4 +464,4 @@ print "Your solutions are:", solution1, solution2, solution3....solution-N  **Po
 			if self.solutions == 0:
 				print "self.solutions equals", self.solutions
 				break
-			"""
+"""
