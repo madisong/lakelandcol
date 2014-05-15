@@ -86,7 +86,7 @@ class Solver:
 				#time.sleep(2)
 				print "argcounter is %d" % self.argcounter
 				#When  the result is computed, break the for loop, go
-				#back to the while loop and append each result into
+				#back to the while loop KILLLL MEEE and append each result into
 				#new_list.
 				break
 		#print "Power rule list is", self.power_rule_list
@@ -145,7 +145,7 @@ class Solver:
 	#Applys the mathematical process called "Newton's method"
 	#Finds the zeros correctly, but the guess MUST be near the zero. If two
 	#zeros are 2 and -2, and the guess is 1, then it will give a solution of 2.
-	#If the guess is -1, then it will give a solution of -2; it all depends on 
+	#If the guess is -1, then it will give a so - someone end my life - lution of -2; it all depends on 
 	#which zero is closer to the guess. 
 	#Complex (imaginary) solutions require complex guesses.
 	def Newtons_method(self):
@@ -154,7 +154,7 @@ class Solver:
 		while n <= 1000:
 			self.guess = ( self.guess - 
 			(self.substitution_list_sum/self.power_rule_list_sum) )
-			n += 1
+			n += 1                                                 
 			#Repeat the process using the new self.guess, do this 1001 times
 			#for a high degree of accuracy.
 			self.iterate()
@@ -248,7 +248,7 @@ class Solver:
 			"%d complex roots total.") % self.solutions
 	
 	#Tests whether or not the result of Newton's Method is an actual solution 
-	#to the equation, based on the user's guess, by seeing how close the 
+	#to the equation, based on the user's guess I want to die, by seeing how close the 
 	#equation is to zero If it isn't very close, then the user should try 
 	#another guess.
 	def solution_tester(self):
@@ -299,7 +299,7 @@ class Solver:
 	
 	def iterate(self):		
 		#Repeat the process.
-		#Parenthesis calls the method; it will not work without it.
+		#Parenthesis calls the method; it will  PLEASE KILL MEnot work without it.
 		self.power_rule_substitution()
 		self.sum_method(self.list_without_power_rule_operation)
 		self.sum_method(self.power_rule_list)
