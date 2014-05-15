@@ -4,6 +4,7 @@
 
 #division module makes it so division operator doesn't round the  quotient
 from __future__ import division
+from decimal import *
 import sys
 #cmath module allows for complex operations and solutions
 import cmath
@@ -319,16 +320,21 @@ class Solver:
 				print "That is a new solution"
 				self.answers.append(self.guess)
 				self.solutions -= 1
-			if self.conjugate == True:
-				print "The conjugate is also a new solution"
-				self.solutions -= 1
+				if self.conjugate == True:
+					print "The conjugate is also a new solution."
+					self.answers.append( complex(self.guess.real, 
+						-1*self.guess.imag) )
+				
+					self.solutions -= 1
+				else:
+					print "The conjugate is not unique."
 			else:
 				print ("That solution has already been found,\n"
-				"so it will not be added to self.answers")
+				"so it will not be added to self.answers.")
 			print "The answers list is {0}".format(self.answers)
 
 			print "REPROMPT OUTPUT:\n"
-			print "There are %d solutions left\n" % self.solutions
+			print "There are %d solutions left.\n" % self.solutions
 			
 			if self.solutions == 0:
 				break
@@ -344,7 +350,7 @@ class Solver:
 			self.approximate()
 			self.answer_spitter()
 			
-	#This is a work around; it sets variables that will only change once and
+	#This is a work around; it sets variables that will only be reset once and
 	#never again.
 	def setter(self):
 		self.reprompt_return_value = 1
@@ -356,16 +362,16 @@ class Solver:
 		print "ANSWER_SPITTER OUTPUT:\n"
 		#If the imaginary part exists and all the coeffcients are real, 
 		#then the conjugate also exists.
-		if ( (self.guess.imag != 0 or self.guess.real > -1e-6) 
-			and self.conjugate_return != 1 ):
+		if ( (self.guess.imag != 0 or self.guess.imag < -1e-6 or 
+			self.guess.imag > 1e-6) and self.conjugate_return != 1 ):
 			
 			#print "This is a pure imaginary answer\n"
 			print "The answer is {0}".format(self.guess)
 			print "and the conjugate answer is {0} \n".format( -1*self.guess)
 			self.conjugate = True
 		else:
-			print ("This solution doesn't have an imaginary part, so it has"
-			"no\n conjugate answer.")
+			print ("This solution doesn't have an imaginary part, so it has "
+			"no\nconjugate answer.")
 		
 		#else:
 			#print "This is a complex answer\n"
@@ -377,6 +383,27 @@ class Solver:
 			print "and the conjugate answer is {0}".format( self.guess.real + 
 			self.guess.imag*-1j )
 		"""
+	
+	#If a polynomial has rational coefficients, and (a - sqrt(b)) is a root, 
+	#then (a + sqrt(b)) is a root.
+	def irrational_checker(self):
+		print "IRRATIONAL OUTPUT\n"
+		self.irrational = bool()
+		x = 0
+		getcontext().prec = 100000
+		for coefficients in self.args:
+			print self.args[self.i]
+			if len(self.args[self.i]) > 1000:
+				print "Not all coeffcients are rational"
+				self.irrational = True
+				return
+			x += 1
+			self.i = 2*x + 1
+			if self.i == len(self.args)
+	
+		#if it makes it through the for loop, then no coefficients are irrational
+		print "All coeffiecients are rational"
+		self.irrational = False	
 
 #The arguments 1 2 1 0 give ZeroDivisionError when the guess = 1, but works
 #correctly when the guess = 1j
@@ -392,9 +419,7 @@ class Solver:
 #TODO: arguments 1 3 4 -9 has a COMPLEX solution PURE IMAGINARY GUESSES MAKE IT
 #GIVE FALSE SOLUTIONS.
 
-#TODO: do not forget about the complex conjugate theorem for rational roots
-
-#TODO: incorporate conjugates into reprompt
+#irrational number test?
 
 #TODO: how to find double roots?
 
@@ -415,6 +440,8 @@ solverObject.iterate()
 solverObject.Newtons_method()
 solverObject.solution_tester()
 solverObject.approximate()
+solverObject.irrational_checker()
+
 #if reprompt hasn't been called yet
 if solverObject.reprompt_return_value == 1:
 	solverObject.polynomial_checker()
