@@ -4,6 +4,7 @@
 
 #division module makes it so division operator doesn't round the  quotient
 from __future__ import division
+from fractions import Fraction
 from decimal import *
 import sys
 #cmath module allows for complex operations and solutions
@@ -386,24 +387,46 @@ class Solver:
 	
 	#If a polynomial has rational coefficients, and (a - sqrt(b)) is a root, 
 	#then (a + sqrt(b)) is a root.
-	def irrational_checker(self):
-		print "IRRATIONAL OUTPUT\n"
+		
+	#I think there is a better way to do this using the Fraction module and
+	#passing in irrational numbers.
+	def irrational_coefficient_checker(self):
+		print "IRRATIONAL COEFFICIENT OUTPUT:\n"
 		self.irrational = bool()
-		x = 0
+		try:
+			x = 0
+			self.i = 1
+			for coefficients in self.args:
+				print self.args[self.i]
+				Fraction(complex(self.args[self.i]), complex(1))
+				x += 1
+				self.i = 2*x + 1
+				if len(self.args) == self.i:
+					break
+		#except TypeError:
+			#print "I errored"
+			#self.irrational = True
+			#return
+		
+		print "All coeffiecients are rational"
+
+
+	def irrational_root_checker(self):
+		print "IRRATIONAL ROOT CHECKER OUTPUT:\n"
+		getcontext().prec = 30
+		print "self.guess squared is",(self.guess)**2
+		"""
+
 		getcontext().prec = 100000
-		for coefficients in self.args:
-			print self.args[self.i]
-			if len(self.args[self.i]) > 1000:
+			if len(self.args[self.i]) > 1000 or ( len(self.args[self.i]) > 1000
+			and self.args ):
 				print "Not all coeffcients are rational"
-				self.irrational = True
-				return
-			x += 1
-			self.i = 2*x + 1
-			if self.i == len(self.args)
+
+		"""
+	
+		
 	
 		#if it makes it through the for loop, then no coefficients are irrational
-		print "All coeffiecients are rational"
-		self.irrational = False	
 
 #The arguments 1 2 1 0 give ZeroDivisionError when the guess = 1, but works
 #correctly when the guess = 1j
@@ -419,7 +442,8 @@ class Solver:
 #TODO: arguments 1 3 4 -9 has a COMPLEX solution PURE IMAGINARY GUESSES MAKE IT
 #GIVE FALSE SOLUTIONS.
 
-#irrational number test?
+#Work on the irrational number methods
+
 
 #TODO: how to find double roots?
 
@@ -440,7 +464,8 @@ solverObject.iterate()
 solverObject.Newtons_method()
 solverObject.solution_tester()
 solverObject.approximate()
-solverObject.irrational_checker()
+solverObject.irrational_coefficient_checker()
+solverObject.irrational_root_checker()
 
 #if reprompt hasn't been called yet
 if solverObject.reprompt_return_value == 1:
