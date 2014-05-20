@@ -4,6 +4,8 @@
 
 #division module makes it so division operator doesn't round the  quotient
 from __future__ import division
+from fractions import Fraction
+from decimal import *
 import sys
 #cmath module allows for complex operations and solutions
 import cmath
@@ -205,8 +207,10 @@ class Solver:
 	def complex_conjugate(self):
 		print "CONJUGATE OUTPUT:\n"
 		#Checks whether all of the coefficients are real, if not, this method
-		#and a condition in number_of_roots doesn't apply.
-		self.conjugate_value = int()
+		# a condition in number_of_roots, and a condition in answer_spitter
+		#doesn't apply.
+		#Default vale is 0.
+		self.conjugate_return = int()
 		self.i = 1
 		m = 0
 		self.argcounter = (len(self.args) - 1 )/2
@@ -214,7 +218,7 @@ class Solver:
 			print "The coefficients are:{0} \n".format(self.args[self.i])
 			if complex(self.args[self.i]).imag != 0:
 				print "Not all coeffcients are real\n"
-				self.conjugate_value = 1
+				self.conjugate_return = 1
 				return 1
 			self.argcounter -= 1
 			if self.argcounter == 0:
@@ -228,7 +232,7 @@ class Solver:
 		print "ROOT_NUMBER OUTPUT:\n"
 		#self.solutions = max(self.powers)
 		#If reprompt hasn't been called yet.
-		if self.reprompt_value ==  1:			
+		if self.reprompt_return_value ==  1:			
 			self.solutions = max(self.powers)
 
 		#Uses the Fundamental Theorem of Algebra to tell the user how many
@@ -237,7 +241,7 @@ class Solver:
 		#If the leading power of a polynomial is odd and it has real 
 		#coefficients, then it has at least one real root.
 		
-		if self.conjugate_value != 1 and self.solutions % 2 != 0:
+		if self.conjugate_return != 1 and self.solutions % 2 != 0:
 		#I know I could have the condition like this, but is there anyway to
 		#supress the output?
 		#if self.complex_conjugate() != 1 and self.solutions % 2 != 0:
@@ -310,21 +314,31 @@ class Solver:
 		#solution has been found.
 		
 		#self.solutions -= 1
-		self.reprompt_value = 0
+		print "PRE-REPROMPT OUTPUT:\n"
+		self.reprompt_return_value = 0
 		while self.solutions > 0:
 			if self.answers.count(self.guess) == 0:
 				print "That is a new solution"
 				self.answers.append(self.guess)
-				print "The answers list is {0}".format(self.answers)
 				self.solutions -= 1
-
+				if self.conjugate == True:
+					print "The conjugate is also a new solution."
+					self.answers.append( complex(self.guess.real, 
+						-1*self.guess.imag) )
+				
+					self.solutions -= 1
+				else:
+					print "The conjugate is not unique."
 			else:
 				print ("That solution has already been found,\n"
-				"so it will not be added to self.answers")
-				print "the answers list is {0}".format(self.answers)
+				"so it will not be added to self.answers.")
+			print "The answers list is {0}".format(self.answers)
 
 			print "REPROMPT OUTPUT:\n"
-			print "There are %d solutions left\n" % self.solutions
+			print "There are %d solutions left.\n" % self.solutions
+			
+			if self.solutions == 0:
+				break
 			#Calling __init__ resets values.
 			self.__init__(sys.argv)
 			#Call iterate to do the essential operations for Newton's method 
@@ -337,30 +351,82 @@ class Solver:
 			self.approximate()
 			self.answer_spitter()
 			
-	#This is a work around; it sets variables that will only change once and
+	#This is a work around; it sets variables that will only be reset once and
 	#never again.
 	def setter(self):
-		self.reprompt_value = 1
+		self.reprompt_return_value = 1
 		self.answers = []
 
 	def answer_spitter(self):
-		if self.guess.imag != 0 or self.guess.real > -1e-6:
+		#Default bool value is False.
+		self.conjugate = bool()
+		print "ANSWER_SPITTER OUTPUT:\n"
+		#If the imaginary part exists and all the coeffcients are real, 
+		#then the conjugate also exists.
+		if ( (self.guess.imag != 0 or self.guess.imag < -1e-6 or 
+			self.guess.imag > 1e-6) and self.conjugate_return != 1 ):
+			
 			#print "This is a pure imaginary answer\n"
 			print "The answer is {0}".format(self.guess)
 			print "and the conjugate answer is {0} \n".format( -1*self.guess)
+			self.conjugate = True
 		else:
-			print ("This solution doesn't have an imaginary part, so it has"
-			"no\n conjugate answer.")
+			print ("This solution doesn't have an imaginary part, so it has "
+			"no\nconjugate answer.")
 		
 		#else:
 			#print "This is a complex answer\n"
 			#print "The answer is {0}".format(self.guess)
 		
 		#self.guess.imag could or could not equal zero here
+		"""
 		if self.guess != (self.guess.real + self.guess.imag*-1j):
 			print "and the conjugate answer is {0}".format( self.guess.real + 
 			self.guess.imag*-1j )
+		"""
+	
+	#If a polynomial has rational coefficients, and (a - sqrt(b)) is a root, 
+	#then (a + sqrt(b)) is a root.
+		
+	#I think there is a better way to do this using the Fraction module and
+	#passing in irrational numbers.
+	def irrational_coefficient_checker(self):
+		print "IRRATIONAL COEFFICIENT OUTPUT:\n"
+		self.irrational = bool()
+		try:
+			x = 0
+			self.i = 1
+			for coefficients in self.args:
+				print self.args[self.i]
+				Fraction(complex(self.args[self.i]), complex(1))
+				x += 1
+				self.i = 2*x + 1
+				if len(self.args) == self.i:
+					break
+		#except TypeError:
+			#print "I errored"
+			#self.irrational = True
+			#return
+		
+		print "All coeffiecients are rational"
 
+
+	def irrational_root_checker(self):
+		print "IRRATIONAL ROOT CHECKER OUTPUT:\n"
+		getcontext().prec = 30
+		print "self.guess squared is",(self.guess)**2
+		"""
+
+		getcontext().prec = 100000
+			if len(self.args[self.i]) > 1000 or ( len(self.args[self.i]) > 1000
+			and self.args ):
+				print "Not all coeffcients are rational"
+
+		"""
+	
+		
+	
+		#if it makes it through the for loop, then no coefficients are irrational
 
 #The arguments 1 2 1 0 give ZeroDivisionError when the guess = 1, but works
 #correctly when the guess = 1j
@@ -376,11 +442,8 @@ class Solver:
 #TODO: arguments 1 3 4 -9 has a COMPLEX solution PURE IMAGINARY GUESSES MAKE IT
 #GIVE FALSE SOLUTIONS.
 
-#TODO: do not forget about the complex conjugate theorem for rational roots
+#Work on the irrational number methods
 
-#TODO: incorporate conjugates into reprompt
-
-#TODO reprompt isn't subtracting from the number of solutions when it should
 
 #TODO: how to find double roots?
 
@@ -401,12 +464,15 @@ solverObject.iterate()
 solverObject.Newtons_method()
 solverObject.solution_tester()
 solverObject.approximate()
-solverObject.answer_spitter()
+solverObject.irrational_coefficient_checker()
+solverObject.irrational_root_checker()
+
 #if reprompt hasn't been called yet
-if solverObject.reprompt_value == 1:
+if solverObject.reprompt_return_value == 1:
 	solverObject.polynomial_checker()
 	solverObject.complex_conjugate()
 	solverObject.number_of_roots()
+solverObject.answer_spitter()
 solverObject.reprompt()
 #Pseudocode
 
