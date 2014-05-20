@@ -7,6 +7,7 @@ from __future__ import division
 from fractions import Fraction
 from decimal import *
 import sys
+import math
 #cmath module allows for complex operations and solutions
 import cmath
 import time
@@ -398,16 +399,17 @@ class Solver:
 			self.i = 1
 			for coefficients in self.args:
 				print self.args[self.i]
-				Fraction(complex(self.args[self.i]), complex(1))
+				#Fraction(complex(self.args[self.i]), complex(1))
+				Fraction(math.sqrt(2), 1)
 				x += 1
 				self.i = 2*x + 1
 				if len(self.args) == self.i:
 					break
-		#except TypeError:
-			#print "I errored"
-			#self.irrational = True
-			#return
-		
+		except TypeError:
+			print "I errored"
+			self.irrational = True
+			return
+
 		print "All coeffiecients are rational"
 
 
