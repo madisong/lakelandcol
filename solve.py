@@ -391,40 +391,42 @@ class Solver:
 		
 	#I think there is a better way to do this using the Fraction module and
 	#passing in irrational numbers.
-	def irrational_coefficient_checker(self):
-		print "IRRATIONAL COEFFICIENT OUTPUT:\n"
-		self.irrational = bool()
-		try:
-			x = 0
-			self.i = 1
-			for coefficients in self.args:
-				print self.args[self.i]
-				#Fraction(complex(self.args[self.i]), complex(1))
-				Fraction(math.sqrt(2), 1)
-				x += 1
-				self.i = 2*x + 1
-				if len(self.args) == self.i:
-					break
-		except TypeError:
-			print "I errored"
-			self.irrational = True
-			return
 
-		print "All coeffiecients are rational"
+
 
 
 	def irrational_root_checker(self):
 		print "IRRATIONAL ROOT CHECKER OUTPUT:\n"
 		getcontext().prec = 30
 		print "self.guess squared is",(self.guess)**2
-		"""
+		
+	def irrational_coefficient_checker(self):
+		print "IRRATIONAL COEFFICIENT OUTPUT:\n"
+		irrational = bool()
+		try:
+			x = 0
+			i = 1
+			for coefficient in self.args:
+				Fraction(complex(self.args[i]), complex(1))
+				x  += 1
+				i = 2*x + 1
+		except TypeError as e:
+				print e
+				print "I errored"
+				self.irrational = True
+				return
+		print "I didn't error"
+				
+	print "All coeffiecients are rational"
+
+	"""
 
 		getcontext().prec = 100000
 			if len(self.args[self.i]) > 1000 or ( len(self.args[self.i]) > 1000
 			and self.args ):
 				print "Not all coeffcients are rational"
 
-		"""
+	"""
 	
 		
 	
