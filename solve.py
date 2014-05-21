@@ -402,14 +402,17 @@ class Solver:
 		
 	def irrational_coefficient_checker(self):
 		print "IRRATIONAL COEFFICIENT OUTPUT:\n"
-		irrational = bool()
+		self.irrational = bool()
 		try:
 			x = 0
 			i = 1
+			print type(self.args[i])
 			for coefficient in self.args:
-				Fraction(complex(self.args[i]), complex(1))
+				Fraction(int(self.args[i]), 1)
 				x  += 1
 				i = 2*x + 1
+				if i > len(self.args) -2:
+					break
 		except TypeError as e:
 				print e
 				print "I errored"
