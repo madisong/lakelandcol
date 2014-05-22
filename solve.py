@@ -394,7 +394,6 @@ class Solver:
 
 
 
-
 	def irrational_root_checker(self):
 		print "IRRATIONAL ROOT CHECKER OUTPUT:\n"
 		getcontext().prec = 30
