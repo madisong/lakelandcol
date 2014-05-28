@@ -1,18 +1,16 @@
-#Written By Collin Lakeland.
+#Damn you Kanon Written By Collin Lakeland.
 
 #This is a program to solve any equation using Newton's Method.
 
-#division module makes it so division operator doesn't round the quotient
+#division module makes it so division operator doesn't round the  quotient
 from __future__ import division
+from fractions import Fraction
 from decimal import *
-#Imported for the valuable method float.is_integer
-import numbers
+import sys
 import math
 #cmath module allows for complex operations and solutions
 import cmath
-import sys
 import time
-
 
 #The imaginary number i = (-1)^0.5 = j in Python.
 #Any number with a j appended to it is treated as a complex number by Python.
@@ -41,78 +39,86 @@ class Solver:
 	#power_rule operation is used on coeffcient/power pairs, ex. elements 
 	#at indexes (1,2),(3,4), etc.
 	def power_rule_substitution(self):
-		print "POWER RULE OUTPUT\n"
-		print "THE LENGTH OF ARGV IS {0}".format( len(self.args) )
-		x = 1
-		#Initial index value
-		self.i = 2
-		#Subtract initial argument, the program name, and divide it
-		#by 2 to get the correct iterations
-		self.argcounter = (len(self.args) - 1) / 2
-		
-		#For results of power_rule. 0 is a placeholder in this list
-		
-		while self.argcounter >= 0:
-			#Stop appending once argcounter = 0.
-			if self.argcounter == 0:
-				break
-			for arg in self.args:
+		try:
+			print "POWER RULE OUTPUT\n"
+			print "THE LENGTH OF ARGV IS {0}".format( len(self.args) )
+			x = 1
+			#Initial index value
+			self.i = 2
+			#Subtract initial argument, the program name, and divide it
+			#by 2 to get the correct iterations
+			self.argcounter = (len(self.args) - 1) / 2
+			
+			#For results of power_rule. 0 is a placeholder in this list
+			
+			while self.argcounter >= 0:
+				#Stop appending once argcounter = 0.
+				if self.argcounter == 0:
+					break
+				for arg in self.args:
+					
+					#print "p is", complex(self.args[self.i])
+					#print "c is", complex(self.args[self.i-1])
+					#print "x is", x
+					#print "self.args index is %d" % self.i				
+			
+					#The call is odd.
+					if self.power_rule_counter % 2 != 0:
+						#Power rule operation
+						#power * (corresponding coefficient * guess ^ (power - 1))
+						#String formatting is not used for results, because there
+						#is no formatting for complex numbers.
+						self.o = complex(self.args[self.i]) * (
+							complex(self.args[self.i-1]) * self.guess ** 
+							(complex(self.args[self.i]) - 1 ) )
+						
+						print "self.o is {0}".format(self.o)
+						self.power_rule_list.append(self.o)
+	
+					#The call is even.
+					if self.power_rule_counter % 2 == 0:
+						#Substitution, no power rule operation.
+						self.y = complex( self.args[self.i-1] ) * self.guess ** ( 
+							complex( self.args[self.i] ) )
+						
+						print "self.y is {0}".format(self.y)
+						self.list_without_power_rule_operation.append(self.y)
+					x += 1
+					#Power elements
+					self.i = 2*x
+					self.argcounter -= 1
+					#time.sleep(2)
+					print "argcounter is %d" % self.argcounter
+					#When  the result is computed, break the for loop, go
+					#back to the while loop and append each result into
+					#new_list.
+					break
+			#print "Power rule list is", self.power_rule_list
+			#print "Substitution list is", self.list_without_power_rule_operation
+			
+			#This is supposed to prevent an infinite loop from occuring, while
+			#allowing self.power_rule_substitution to be called a second time.
+			#time.sleep(2)
+			if self.power_rule_counter % 2 != 0:
+				#Do not change the order.
 				
-				#print "p is", complex(self.args[self.i])
-				#print "c is", complex(self.args[self.i-1])
-				#print "x is", x
-				#print "self.args index is %d" % self.i				
+				self.power_rule_counter += 1
+				self.power_rule_substitution()
+			else:
+				self.power_rule_counter += 1
 		
-				#The call is odd.
-				if self.power_rule_counter % 2 != 0:
-					#Power rule operation
-					#power * (corresponding coefficient * guess ^ (power - 1))
-					self.o = complex(self.args[self.i]) * (
-						complex(self.args[self.i-1]) * self.guess ** 
-						(complex(self.args[self.i]) - 1 ) )
-					
-					print "self.o is {0}".format(self.o)
-					self.power_rule_list.append(self.o)
-
-				#The call is even.
-				if self.power_rule_counter % 2 == 0:
-					#Substitution, no power rule operation.
-					self.y = complex( self.args[self.i-1] ) * self.guess ** ( 
-						complex( self.args[self.i] ) )
-					
-					print "self.y is {0}".format(self.y)
-					self.list_without_power_rule_operation.append(self.y)
-				x += 1
-				#Power elements
-				self.i = 2*x
-				self.argcounter -= 1
-				#time.sleep(2)
-				print "argcounter is %d" % self.argcounter
-				#When  the result is computed, break the for loop, go
-				#back to the while loop and append each result into
-				#new_list.
-				break
-		#print "Power rule list is", self.power_rule_list
-		#print "Substitution list is", self.list_without_power_rule_operation
-		
-		#This is supposed to prevent an infinite loop from occuring, while
-		#allowing self.power_rule_substitution to be called a second time.
-		#time.sleep(2)
-		if self.power_rule_counter % 2 != 0:
-			#Do not change the order.
-			
-			self.power_rule_counter += 1
-			self.power_rule_substitution()
-		else:
-			self.power_rule_counter += 1
-			
-	#This sums all the elements in list_without_power_rule_operation and
-	#sums all the elements in new_list.
+		except:
+			pass
+				
+		#This sums all the elements in list_without_power_rule_operation and
+		#sums all the elements in new_list.
 	def sum_method(self, data_list):
 		print "SUM METHOD OUTPUT:\n"
 		a = 2
 		n = len(data_list) - 1
 		print "LENGTH - 1 IS %d" % n
+		print "data list is", self.list_without_power_rule_operation
+		print "the second pass in is", self.power_rule_list
 		
 		#Add the first two elements.
 		#complex is used because you could have complex numbers as input and
@@ -170,10 +176,71 @@ class Solver:
 		#The single result of Newton's
 		print "THE FINAL RESULT OF NEWTON'S METHOD IS: {0}".format(self.guess)
 		print
+<<<<<<< HEAD
+=======
+	#If the input entered doesn't correspond to a polynomial, then all of 
+	#the following methods, except solution_tester, do not apply.
+	def polynomial_checker(self):
+		print "CHECKER OUTPUT:\n"
+		self.i = 2
+		b = 0
+		#Is there a cleaner way of this reassignment to its initial value?
+		self.argcounter = (len(self.args) - 1) / 2 
+		#Take all the powers from the user input, and put them in a list.
+		while self.argcounter >= 0:
+			self.powers.append(float(self.args[self.i]))
+			self.i += 2
+			self.argcounter -= 1
+			if self.argcounter == 0:
+				break
+		print "powers is {0}".format(self.powers)
+		#Gives the numbers after the decimal point, if any. In other words,
+		#determines if the number is an integer in the mathematical sense,
+		#Using int() on any float just cuts off the decimal portion 
+		#of the number.
+		for elements in self.powers:
+			#print "Integer is", int(powers[b])
+			a = self.powers[b] - int(self.powers[b])
+			print "a is {0}".format(a)
+			#The key piece of logic.
+			if (self.powers[b] < 0 or a != 0.0 or type(self.powers[b])
+			== complex):
+				
+				print ("This is not a polynomial,\n"
+				"so the number of roots cannot be determined.")
+				sys.exit()
+			b += 1
+			
+	#Uses the complex conjugate theorem: if a + b*j is a root, then a - b*j
+	#is also a root.
+	def complex_conjugate(self):
+		print "CONJUGATE OUTPUT:\n"
+		#Checks whether all of the coefficients are real, if not, this method
+		# a condition in number_of_roots, and a condition in answer_spitter
+		#doesn't apply.
+		#Default vale is 0.
+		self.conjugate_return = int()
+		self.i = 1
+		m = 0
+		self.argcounter = (len(self.args) - 1 )/2
+		while self.argcounter >= 0:
+			print "The coefficients are:{0} \n".format(self.args[self.i])
+			if complex(self.args[self.i]).imag != 0:
+				print "Not all coeffcients are real\n"
+				self.conjugate_return = 1
+				return 1
+			self.argcounter -= 1
+			if self.argcounter == 0:
+				break
+			m += 1
+			#self.i is always odd
+			self.i = 2*m + 1
+		print "All coeffcients are real."
+>>>>>>> d0bdfc649473bd4323e879de2dc22af185580f65
 
 
 	#Tests whether or not the result of Newton's Method is an actual solution 
-	#to the equation, based on the user's guess, by seeing how close the 
+	#to the equation, based on the user's guess by seeing how close the 
 	#equation is to zero If it isn't very close, then the user should try 
 	#another guess.
 	def solution_tester(self):
@@ -289,6 +356,7 @@ class Solver:
 		else:
 			print ("This solution doesn't have an imaginary part, so it has "
 			"no\nconjugate answer.")
+<<<<<<< HEAD
 
 	#This is a work around; it sets variables that will only be reset once and
 	#never again.
@@ -296,8 +364,28 @@ class Solver:
 		self.reprompt_return_value = 1
 		self.answers = []
 		
+=======
+		
+		#else:
+			#print "This is a complex answer\n"
+			#print "The answer is {0}".format(self.guess)
+		
+		#self.guess.imag could or could not equal zero here
+		"""
+		if self.guess != (self.guess.real + self.guess.imag*-1j):
+			print "and the conjugate answer is {0}".format( self.guess.real + 
+			self.guess.imag*-1j )
+		"""
+	
+>>>>>>> d0bdfc649473bd4323e879de2dc22af185580f65
 	#If a polynomial has rational coefficients, and (a - sqrt(b)) is a root, 
 	#then (a + sqrt(b)) is a root.
+		
+	#I think there is a better way to do this using the Fraction module and
+	#passing in irrational numbers.
+
+
+
 	def irrational_root_checker(self):
 		print "IRRATIONAL ROOT CHECKER OUTPUT:\n"
 		getcontext().prec = 30
@@ -394,38 +482,24 @@ class Solver:
 	def irrational_coefficient_checker(self):
 		print "IRRATIONAL COEFFICIENT OUTPUT:\n"
 		self.irrational = bool()
-		x = 0
-		i = 1
-		for coefficient in self.args:
-			print self.args[i]
-			self.args[i] = complex(self.args[i])
+		try:
+			x = 0
+			i = 1
 			print type(self.args[i])
-			#This is done because float.is_integer requires arguments of type 
-			#float, not complex.			
-			if type(self.args[i]) == complex:
-				float.is_integer(self.args[i].real)
-				float.is_integer(self.args[i].imag)
-			else:
-				float.is_integer(self.args[i])
-				
-			if float.is_integer == False:
+			for coefficient in self.args:
+				Fraction(int(self.args[i]), 1)
+				x  += 1
+				i = 2*x + 1
+				if i > len(self.args) -2:
+					break
+		except TypeError as e:
+				print e
 				print "I errored"
 				self.irrational = True
 				return
-			else:
-				print "I didn't error this time."
+		print "I didn't error"
 				
-			x  += 1
-			i = 2*x + 1
-			if i > len(self.args) -2:
-				break
-		print "All coefficients are rational"
-		#if it makes it through the for loop, then no coefficients are 
-		#irrational
-
-
-
-
+	print "All coeffiecients are rational"
 
 	"""
 
@@ -436,6 +510,9 @@ class Solver:
 
 	"""
 	
+		
+	
+		#if it makes it through the for loop, then no coefficients are irrational
 
 #The arguments 1 2 1 0 give ZeroDivisionError when the guess = 1, but works
 #correctly when the guess = 1j
@@ -453,14 +530,8 @@ class Solver:
 
 #Work on the irrational number methods
 
-#USE float.is_integer method to test for irrational coeffcients
-
 
 #TODO: how to find double roots?
-
-#TODO: Imaginary coefficients and powers cause it to error
-
-#TODO: Need to incorporate trig, roots, etc into input
 
 solverObject = Solver(sys.argv)
 
@@ -479,15 +550,21 @@ solverObject.iterate()
 solverObject.Newtons_method()
 solverObject.solution_tester()
 solverObject.approximate()
+solverObject.irrational_coefficient_checker()
 solverObject.irrational_root_checker()
 
 #if reprompt hasn't been called yet
 if solverObject.reprompt_return_value == 1:
 	solverObject.polynomial_checker()
+<<<<<<< HEAD
 	if solverObject.polynomial == True:
 		solverObject.complex_conjugate()
 		solverObject.number_of_roots()
 		solverObject.irrational_coefficient_checker()
+=======
+	solverObject.complex_conjugate()
+	solverObject.number_of_roots()
+>>>>>>> d0bdfc649473bd4323e879de2dc22af185580f65
 solverObject.answer_spitter()
 solverObject.reprompt()
 #Pseudocode
@@ -511,4 +588,37 @@ Repeat this process until all solutions are found    If the highest degree is an
 
 print "Your solutions are:", solution1, solution2, solution3....solution-N  **Possibly in a column**
 
+"""
+
+
+
+#Useless code, right now:
+"""
+			i = 0
+			if len(self.answers) > 1:
+				print "PRE-REPROMPT OUTPUT:\n	"
+				for answer in self.answers:
+					#if the newly appended answer is not unique, remove it
+					#self.answers[-1] is the last element in a list
+					if self.answers[i] =! self.answers[-1]:
+						answers_return_value = 0
+						print "self.answers returned 0", answers_return_value				
+					else:
+						answers_return_value = 1
+						print "answers returned", answers_return_value
+						print "The element", self.answers[-1], "will now be removed"
+						self.answers.remove(self.answers[-1])
+						print self.answers
+					i += 1
+					#if it is going to evaluate the same element, break the loop
+					if i == len(self.answers) - 1:
+						print "The for loop broke; it was going to evaluate itself"
+						break
+			#if the newly appended answer is unique, subtract 1 from the number
+			#of solutuions
+			if answers_return_value == 0:
+				self.solutions -= 1
+			if self.solutions == 0:
+				print "self.solutions equals", self.solutions
+				break
 """
