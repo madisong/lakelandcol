@@ -170,89 +170,8 @@ class Solver:
 		#The single result of Newton's
 		print "THE FINAL RESULT OF NEWTON'S METHOD IS: {0}".format(self.guess)
 		print
-	#If the input entered doesn't correspond to a polynomial, then all of 
-	#the following methods, except solution_tester, do not apply.
-	def polynomial_checker(self):
-		print "CHECKER OUTPUT:\n"
-		self.i = 2
-		b = 0
-		#Is there a cleaner way of this reassignment to its initial value?
-		self.argcounter = (len(self.args) - 1) / 2
-		#Take all the powers from the user input, and put them in a list.
-		while self.argcounter >= 0:
-			self.powers.append(float(self.args[self.i]))
-			self.i += 2
-			self.argcounter -= 1
-			if self.argcounter == 0:
-				break
-		print "powers is {0}".format(self.powers)
-		#Gives the numbers after the decimal point, if any. In other words,
-		#determines if the number is an integer in the mathematical sense,
-		#Using int() on any float just cuts off the decimal portion 
-		#of the number.
-		for elements in self.powers:
-			#print "Integer is", int(powers[b])
-			a = self.powers[b] - int(self.powers[b])
-			print "a is {0}".format(a)
-			#The key piece of logic.
-			if (self.powers[b] < 0 or a != 0.0 or type(self.powers[b])
-			== complex):
-				
-				print ("This is not a polynomial,\n"
-				"so the number of roots cannot be determined.")
-				#THIS NEEDS TO BE CHANGED
-				sys.exit()
-			b += 1
-			
-	#Uses the complex conjugate theorem: if a + b*j is a root, then a - b*j
-	#is also a root.
-	def complex_conjugate(self):
-		print "CONJUGATE OUTPUT:\n"
-		#Checks whether all of the coefficients are real, if not, this method
-		# a condition in number_of_roots, and a condition in answer_spitter
-		#doesn't apply.
-		#Default value is 0.
-		self.conjugate_return = int()
-		self.i = 1
-		m = 0
-		self.argcounter = (len(self.args) - 1 )/2
-		while self.argcounter >= 0:
-			print "The coefficients are:{0} \n".format(self.args[self.i])
-			if complex(self.args[self.i]).imag != 0:
-				print "Not all coeffcients are real\n"
-				self.conjugate_return = 1
-				return 1
-			self.argcounter -= 1
-			if self.argcounter == 0:
-				break
-			m += 1
-			#self.i is always odd
-			self.i = 2*m + 1
-		print "All coeffcients are real."
 
-	def number_of_roots(self):
-		print "ROOT_NUMBER OUTPUT:\n"
-		#self.solutions = max(self.powers)
-		#If reprompt hasn't been called yet.
-		if self.reprompt_return_value ==  1:			
-			self.solutions = max(self.powers)
 
-		#Uses the Fundamental Theorem of Algebra to tell the user how many
-		#roots there are.
-		
-		#If the leading power of a polynomial is odd and it has real 
-		#coefficients, then it has at least one real root.
-		
-		if self.conjugate_return != 1 and self.solutions % 2 != 0:
-		#I know I could have the condition like this, but is there anyway to
-		#supress the output?
-		#if self.complex_conjugate() != 1 and self.solutions % 2 != 0:
-			print ("There are %d complex roots total, and at least 1 of them is"
-			" real." % self.solutions)
-		else:
-			print ("I don't know how many real roots there are, but there are\n"
-			"%d complex roots total.") % self.solutions
-	
 	#Tests whether or not the result of Newton's Method is an actual solution 
 	#to the equation, based on the user's guess, by seeing how close the 
 	#equation is to zero If it isn't very close, then the user should try 
@@ -352,12 +271,7 @@ class Solver:
 			self.solution_tester()
 			self.approximate()
 			self.answer_spitter()
-			
-	#This is a work around; it sets variables that will only be reset once and
-	#never again.
-	def setter(self):
-		self.reprompt_return_value = 1
-		self.answers = []
+
 
 	def answer_spitter(self):
 		#Default bool value is False.
@@ -375,22 +289,13 @@ class Solver:
 		else:
 			print ("This solution doesn't have an imaginary part, so it has "
 			"no\nconjugate answer.")
-			
-			
+
+	#This is a work around; it sets variables that will only be reset once and
+	#never again.
+	def setter(self):
+		self.reprompt_return_value = 1
+		self.answers = []
 		
-		#else:
-			#print "This is a complex answer\n"
-			#print "The answer is {0}".format(self.guess)
-		
-		#self.guess.imag could or could not equal zero here
-		"""
-		if self.guess != (self.guess.real + self.guess.imag*-1j):
-			print "and the conjugate answer is {0}".format( self.guess.real + 
-			self.guess.imag*-1j )
-		"""
-	
-	
-	
 	#If a polynomial has rational coefficients, and (a - sqrt(b)) is a root, 
 	#then (a + sqrt(b)) is a root.
 	def irrational_root_checker(self):
@@ -398,6 +303,94 @@ class Solver:
 		getcontext().prec = 30
 		print "self.guess squared is",(self.guess)**2
 		
+	#If the input entered doesn't correspond to a polynomial, then all of 
+	#the following methods do not apply.
+	def polynomial_checker(self):
+		print "CHECKER OUTPUT:\n"
+		self.polynomial = bool()
+		self.i = 2
+		b = 0
+		#Is there a cleaner way of this reassignment to its initial value?
+		self.argcounter = (len(self.args) - 1) / 2
+		#Take all the powers from the user input, and put them in a list.
+		while self.argcounter >= 0:
+			self.powers.append(float(self.args[self.i]))
+			self.i += 2
+			self.argcounter -= 1
+			if self.argcounter == 0:
+				break
+		print "powers is {0}".format(self.powers)
+		#Gives the numbers after the decimal point, if any. In other words,
+		#determines if the number is an integer in the mathematical sense,
+		#Using int() on any float just cuts off the decimal portion 
+		#of the number.
+		for elements in self.powers:
+			#print "Integer is", int(powers[b])
+			a = self.powers[b] - int(self.powers[b])
+			print "a is {0}".format(a)
+			#The key piece of logic.
+			if (self.powers[b] < 0 or a != 0.0 or type(self.powers[b])
+			== complex):
+				
+				print ("This is not a polynomial,\n"
+				"so the number of roots cannot be determined.")
+				#THIS NEEDS TO BE CHANGED
+				return
+			b += 1
+		self.polynomial = True
+
+	#Uses the complex conjugate theorem: if a + b*j is a root, then a - b*j
+	#is also a root.
+	def complex_conjugate(self):
+		if self.polynomial == False:
+			return
+		print "CONJUGATE OUTPUT:\n"
+		#Checks whether all of the coefficients are real, if not, this method
+		# a condition in number_of_roots, and a condition in answer_spitter
+		#doesn't apply.
+		#Default value is 0.
+		self.conjugate_return = int()
+		self.i = 1
+		m = 0
+		self.argcounter = (len(self.args) - 1 )/2
+		while self.argcounter >= 0:
+			print "The coefficients are:{0} \n".format(self.args[self.i])
+			if complex(self.args[self.i]).imag != 0:
+				print "Not all coeffcients are real\n"
+				self.conjugate_return = 1
+				return 1
+			self.argcounter -= 1
+			if self.argcounter == 0:
+				break
+			m += 1
+			#self.i is always odd
+			self.i = 2*m + 1
+		print "All coeffcients are real."
+
+	def number_of_roots(self):
+		print "ROOT_NUMBER OUTPUT:\n"
+		#self.solutions = max(self.powers)
+		#If reprompt hasn't been called yet.
+		if self.reprompt_return_value ==  1:			
+			self.solutions = max(self.powers)
+
+		#Uses the Fundamental Theorem of Algebra to tell the user how many
+		#roots there are.
+		
+		#If the leading power of a polynomial is odd and it has real 
+		#coefficients, then it has at least one real root.
+		
+		if self.conjugate_return != 1 and self.solutions % 2 != 0:
+		#I know I could have the condition like this, but is there anyway to
+		#supress the output?
+		#if self.complex_conjugate() != 1 and self.solutions % 2 != 0:
+			print ("There are %d complex roots total, and at least 1 of them is"
+			" real." % self.solutions)
+		else:
+			print ("I don't know how many real roots there are, but there are\n"
+			"%d complex roots total.") % self.solutions
+	
+
 	def irrational_coefficient_checker(self):
 		print "IRRATIONAL COEFFICIENT OUTPUT:\n"
 		self.irrational = bool()
@@ -491,9 +484,10 @@ solverObject.irrational_root_checker()
 #if reprompt hasn't been called yet
 if solverObject.reprompt_return_value == 1:
 	solverObject.polynomial_checker()
-	solverObject.complex_conjugate()
-	solverObject.number_of_roots()
-	solverObject.irrational_coefficient_checker()
+	if solverObject.polynomial == True:
+		solverObject.complex_conjugate()
+		solverObject.number_of_roots()
+		solverObject.irrational_coefficient_checker()
 solverObject.answer_spitter()
 solverObject.reprompt()
 #Pseudocode
