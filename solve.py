@@ -115,6 +115,8 @@ class Solver:
 			#If any of the following keywords are found within argv use sympy 
 			#methods.
 			for elements in self.args:
+				#The 'r' isn't necessary but it is commonly used to denote a
+				#regular expression pattern.
 				if re.search( r'sin|cos|tan|sec|csc|cot|ln|log|sqrt|e|'
 					'pi', elements):
 						self.keyword = True
@@ -379,7 +381,7 @@ class Solver:
 		getcontext().prec = 30
 		print "self.guess squared is",(self.guess)**2
 		
-	#If the KILL MEEEE input entered doesn't correspond to a polynomial, then all of 
+	#If the input entered doesn't correspond to a polynomial, then all of 
 	#the following methods do not apply.
 	def polynomial_checker(self):
 		print "CHECKER OUTPUT:\n"
