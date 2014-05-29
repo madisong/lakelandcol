@@ -1,10 +1,25 @@
-str = 'an example word:cat!!'
+"""stuff = 'an example word:cat!!\nCollin loves Lexi'
 
-match = re.search(r'word:www', str)
+match = re.search(r'!$', stuff, re.X|re.M )
 
-# If-statement after search() tests if it succeeded
-  if match:                      
-    print 'found', match.group() ## 'found word:cat'
+#If-statement after search() tests if it succeeded
+print match
+if match:
+	print "Found '{0}'".format(match.group()) #found word:cat
 
-  else:
-    print 'did not find'
+if match == None:
+	print "Didn\'t find the pattern you wanted"
+"""    
+import re
+programming = ["Bash", "Python", "Perl", "PHP", "C++","Pascal", "Python","Beer	"]
+
+pat = "Bash|^P|i$|\+$"
+
+for lang in programming:
+	
+	if re.search(pat,lang,re.I):
+		print "{0} FOUND".format(lang)
+	else:
+		print lang, "NOT FOUND"
+print re.search(pat,lang,re.I)
+

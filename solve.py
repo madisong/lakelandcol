@@ -11,6 +11,7 @@ import numbers
 import cmath
 import math
 import sympy
+import re
 import sys
 import time
 
@@ -109,38 +110,43 @@ class Solver:
 		except ValueError as e:
 			print 'The error is "{0}"'.format(e)
 			print self.args
-			print type(self.args)
 			self.keyword = False
 			i = 0
 			#If any of the following keywords are found within argv use sympy 
 			#methods.
 			for elements in self.args:
-				
-				keyword_list = ['sin', 'cos', 'tan', 'csc', 'tan', 'sec', 'cot',
-				'ln', 'log', 'math.e', 'math.pi']
-				
-				if self.args[i] in keyword_list:
-					self.keyword = True
-					print "There are keywords here."
-
-				
+				if re.search( r'sin|cos|tan|sec|csc|cot|ln|log|sqrt|e|'
+					'pi', elements):
+						self.keyword = True
+						print "The keyword \"{0}\" is here.".format(elements)
 				else:
-					print "There are no keywords here."
+					print "\"{0}\" is not a keyword.".format(elements)
 				i += 1
 				if i > len(self.args):
 					break
 	
 	def special_differentiation(self):
 		if self.keyword == True:
-			a = 0
-			b = 0
 			i = 1
 			for elements in self.args:
 				#Creates the first part of a string using sympy syntax; it will
 				#soon be turned into a sympy object.
-				s = "{a}**{b}".format(self.args[i], self.args[i+1])
-				break
-			print s
+				term1 = "{0}**{1}+".format(self.args[i], self.args[i+1])
+				#Move on to next coefficient/ power pair.
+				#i will always be odd, and the length of self.args
+				#will always be odd, so once i equals the length,
+				#term2 isn't needed.
+				i += 2
+				if i == len(self.args):
+					#Strip the "+" on the end of the string.
+					expression = expression.rstrip("+")
+					break
+				#Create a new term, using the new value of i
+				#CLEANER WAY TO DO THIS??
+				term2 = "{0}**{1}+".format(self.args[i], self.args[i+1])
+				
+				expression = term1 + term2
+			print expression
 	
 	#This sums all the elements in list_without_power_rule_operation and
 	#sums all the elements in new_list.
