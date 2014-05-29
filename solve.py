@@ -107,19 +107,22 @@ class Solver:
 				self.power_rule_counter += 1
 		
 		except ValueError as e:
-			print "The error is {0}".format(e)
+			print 'The error is "{0}"'.format(e)
 			print self.args
-			self.keyword = bool()
+			print type(self.args)
+			self.keyword = False
 			i = 0
 			#If any of the following keywords are found within argv use sympy 
 			#methods.
 			for elements in self.args:
-				print self.args[i]
-				if (  ("sin" or "cos" or "tan" or "csc" or "sec" or
-				"cot" or "ln" or "log" or "math.e" or "math.pi") in self.args[i] ):
-						
-					self.keyword == True
+				
+				keyword_list = ['sin', 'cos', 'tan', 'csc', 'tan', 'sec', 'cot',
+				'ln', 'log', 'math.e', 'math.pi']
+				
+				if self.args[i] in keyword_list:
+					self.keyword = True
 					print "There are keywords here."
+
 				
 				else:
 					print "There are no keywords here."
@@ -370,7 +373,7 @@ class Solver:
 		getcontext().prec = 30
 		print "self.guess squared is",(self.guess)**2
 		
-	#If the input entered doesn't correspond to a polynomial, then all of 
+	#If the KILL MEEEE input entered doesn't correspond to a polynomial, then all of 
 	#the following methods do not apply.
 	def polynomial_checker(self):
 		print "CHECKER OUTPUT:\n"
