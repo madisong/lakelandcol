@@ -129,7 +129,8 @@ class Solver:
 	
 	def special_differentiation(self):
 		if self.keyword == True:
-			i = 1
+			x = 1
+			i = 2
 			for elements in self.args:
 				#Creates the first part of a string using sympy syntax; it will
 				#soon be turned into a sympy object.
@@ -138,7 +139,8 @@ class Solver:
 				#i will always be odd, and the length of self.args
 				#will always be odd, so once i equals the length,
 				#term2 isn't needed.
-				i += 2
+				x += 1
+				i = 2*x
 				if i == len(self.args):
 					#Strip the "+" on the end of the string.
 					expression = expression.rstrip("+")
