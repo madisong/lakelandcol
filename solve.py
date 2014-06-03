@@ -130,6 +130,7 @@ class Solver:
 		self.x = symbols('x')
 		if self.keyword == True:
 			x = 1
+<<<<<<< HEAD
 			argcounter = ( (len(self.args)) - 1 )/ 2
 			self.expression_string = ""
 			while argcounter > 0:
@@ -164,6 +165,30 @@ class Solver:
 		print "The final result of the SPECIAL Newton\'s method is", self.guess
 
 
+=======
+			i = 2
+			for elements in self.args:
+				#Creates the first part of a string using sympy syntax; it will
+				#soon be turned into a sympy object.
+				term1 = "{0}**{1}+".format(self.args[i], self.args[i+1])
+				#Move on to next coefficient/ power pair.
+				#i will always be odd, and the length of self.args
+				#will always be odd, so once i equals the length,
+				#term2 isn't needed.
+				x += 1
+				i = 2*x
+				if i == len(self.args):
+					#Strip the "+" on the end of the string.
+					expression = expression.rstrip("+")
+					break
+				#Create a new term, using the new value of i
+				#CLEANER WAY TO DO THIS??
+				term2 = "{0}**{1}+".format(self.args[i], self.args[i+1])
+				
+				expression = term1 + term2
+			print expression
+	
+>>>>>>> d3a2da29b3da20c4c2eef1ebd8c6184c87744672
 	#This sums all the elements in list_without_power_rule_operation and
 	#sums all the elements in new_list.
 	def sum_method(self, data_list):
