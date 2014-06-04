@@ -21,6 +21,7 @@ import time
 #Any number with a j appended to it is treated as a complex number by Python.
 class Solver:
 
+	
 	def __init__(self, argv):
 		print ("Hello, welcome to Collin's solver program!\n"
 		"Note, your equation must be set equal to zero,\n"
@@ -130,7 +131,6 @@ class Solver:
 		self.x = symbols('x')
 		if self.keyword == True:
 			x = 1
-<<<<<<< HEAD
 			argcounter = ( (len(self.args)) - 1 )/ 2
 			self.expression_string = ""
 			while argcounter > 0:
@@ -165,30 +165,7 @@ class Solver:
 		print "The final result of the SPECIAL Newton\'s method is", self.guess
 
 
-=======
-			i = 2
-			for elements in self.args:
-				#Creates the first part of a string using sympy syntax; it will
-				#soon be turned into a sympy object.
-				term1 = "{0}**{1}+".format(self.args[i], self.args[i+1])
-				#Move on to next coefficient/ power pair.
-				#i will always be odd, and the length of self.args
-				#will always be odd, so once i equals the length,
-				#term2 isn't needed.
-				x += 1
-				i = 2*x
-				if i == len(self.args):
-					#Strip the "+" on the end of the string.
-					expression = expression.rstrip("+")
-					break
-				#Create a new term, using the new value of i
-				#CLEANER WAY TO DO THIS??
-				term2 = "{0}**{1}+".format(self.args[i], self.args[i+1])
-				
-				expression = term1 + term2
-			print expression
-	
->>>>>>> d3a2da29b3da20c4c2eef1ebd8c6184c87744672
+
 	#This sums all the elements in list_without_power_rule_operation and
 	#sums all the elements in new_list.
 	def sum_method(self, data_list):
@@ -325,6 +302,9 @@ class Solver:
 	def reprompt(self):
 		print "PRE-REPROMPT OUTPUT:\n"
 		self.reprompt_return_value = 0
+		if self.polynomial == False:
+			while 1:
+				power
 		if self.keyword == False:
 			while self.solutions > 0:
 				if self.answers.count(self.guess) == 0:
@@ -349,7 +329,7 @@ class Solver:
 				print "There are %d solutions left.\n" % self.solutions
 				
 				if self.solutions == 0:
-					break
+					dbreak
 				#Calling __init__ resets values.
 				self.__init__(sys.argv)
 				#Call iterate to do the essential operations for Newton's method 
@@ -410,8 +390,8 @@ class Solver:
 		getcontext().prec = 30
 		print "self.guess squared is",(self.guess)**2
 		
-#If the input entered doesn't correspond to a polynomial, then NONE OF THE
-#FOLLOWING METHODS APPLY.
+	#If the input entered doesn't correspond to a polynomial, then NONE OF THE
+	#FOLLOWING METHODS APPLY.
 	def polynomial_checker(self):
 		print "CHECKER OUTPUT:\n"
 		self.polynomial = bool()
@@ -526,36 +506,43 @@ class Solver:
 
 
 #Work on the irrational number methods
-
-solverObject = Solver(sys.argv)
-
-solverObject.setter()
-#All of these lines only get called once; reprompt handles all the subsequent 
-#calls.
-solverObject.power_rule_substitution()
-if solverObject.keyword == True:
-	solverObject.expression_creator()
-	solverObject.special_Newtons_method()
-else:
-	solverObject.sum_method(solverObject.power_rule_list)
-	solverObject.sum_method(solverObject.list_without_power_rule_operation)
-	solverObject.Newtons_method()
-
-solverObject.solution_tester()
-solverObject.approximate()
-
-#if reprompt hasn't been called yet
-if solverObject.reprompt_return_value == 1:
-	if solverObject.keyword == False:
-		#If there are no keywords, then the polynomial attribute is created.
-		solverObject.polynomial_checker()
-		if solverObject.polynomial == True:
-			solverObject.conjugate_tester()
-			solverObject.number_of_roots()
-		#solverObject.irrational_coefficient_checker()
-solverObject.answer_spitter()
-solverObject.reprompt()
-
+while 1:
+	try:
+		solverObject = Solver(sys.argv)
+		
+		solverObject.setter()
+		#All of these lines only get called once; reprompt handles all the subsequent 
+		#calls.
+		solverObject.power_rule_substitution()
+		if solverObject.keyword == True:
+			solverObject.expression_creator()
+			solverObject.special_Newtons_method()
+		else:
+			solverObject.sum_method(solverObject.power_rule_list)
+			solverObject.sum_method(solverObject.list_without_power_rule_operation)
+			solverObject.Newtons_method()
+		
+		solverObject.solution_tester()
+		solverObject.approximate()
+		
+		#if reprompt hasn't been called yet
+		if solverObject.reprompt_return_value == 1:
+			if solverObject.keyword == False:
+				#If there are no keywords, then the polynomial attribute is created.
+				solverObject.polynomial_checker()
+				if solverObject.polynomial == True:
+					solverObject.conjugate_tester()
+					solverObject.number_of_roots()
+				#solverObject.irrational_coefficient_checker()
+		solverObject.answer_spitter()
+		solverObject.reprompt()
+		
+	except ZeroDivisionError:
+		print ("Ooops, it looks like your guess was zero or not in\n the "
+		"function's domain. Guess again. Maybe make it complex, real,\n or a "
+		"pure imaginary number. Hit \"control-C\" to exit.\n Please wait....")
+		time.sleep(30)
+		continue
 
 
 
