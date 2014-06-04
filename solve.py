@@ -21,16 +21,11 @@ import time
 #Any number with a j appended to it is treated as a complex number by Python.
 class Solver:
 
-	
 	def __init__(self, argv):
-		print ("Hello, welcome to Collin's solver program!\n"
-		"Note, your equation must be set equal to zero,\n"
-		"and your guess must be fairly close to the root.\n" 
-		"If you think a root is zero, then guess close to\n"
-		"zero, but not actually zero.")
-		
+		pass
+
+	def original_variables(self, argv):
 		#User input; converted to complex type.
-		self.guess = complex(input("Take a guess: "))
 		#Initial coefficients and powers.
 		self.args = argv
 		self.sum_call_counter = 1
@@ -43,7 +38,17 @@ class Solver:
 		self.o = complex()
 		self.power_rule_list = [0]
 		self.list_without_power_rule_operation = [0]
-		self.powers = []		
+		self.powers = []	
+
+	def prompter(self):
+		print ("Hello, welcome to Collin's solver program!\n"
+		"Note, your equation must be set equal to zero,\n"
+		"and your guess must be fairly close to the root.\n" 
+		"If you think a root is zero, then guess close to\n"
+		"zero, but not actually zero.\n")
+		self.guess = complex(input("Take a guess: "))
+
+	
 	#power_rule operation is used on coeffcient/power pairs, ex. elements 
 	#at indexes (1,2),(3,4), etc.
 	def power_rule_substitution(self):
@@ -300,12 +305,9 @@ class Solver:
 		self.sum_method(self.power_rule_list)
 
 	def reprompt(self):
-		print "PRE-REPROMPT OUTPUT:\n"
+		print "REPROMPT OUTPUT:\n"
 		self.reprompt_return_value = 0
-		if self.polynomial == False:
-			while 1:
-				power
-		if self.keyword == False:
+		if self.keyword == False and self.polynomial == True:
 			while self.solutions > 0:
 				if self.answers.count(self.guess) == 0:
 					print "That is a new solution"
@@ -329,9 +331,9 @@ class Solver:
 				print "There are %d solutions left.\n" % self.solutions
 				
 				if self.solutions == 0:
-					dbreak
-				#Calling __init__ resets values.
-				self.__init__(sys.argv)
+					break
+				self.original_variables(sys.argv)
+				self.prompter()
 				#Call iterate to do the essential operations for Newton's method 
 				#again.
 				self.iterate()
@@ -341,14 +343,41 @@ class Solver:
 				self.solution_tester()
 				self.approximate()
 				self.answer_spitter()
-
-		else:
+				
+		elif self.keyword == True:
 			#The Fundamental Theorem of Algebra cannot be used, so just keeping
 			#running until the user is done.
 			while 1:
-				self.__init__(sys.argv)
+				if self.answers.count(self.guess) == 0:
+					print "That is a new solution"
+					self.answers.append(self.guess)
+				else:
+					print ("That solution has already been found,\n"
+					"so it will not be added to self.answers.")
+				print "The answers list is {0}".format(self.answers)
+				self.original_variables(sys.argv)
+				self.prompter()
 				self.expression_creator()
 				self.special_Newtons_method()
+				print self.keyword
+				self.solution_tester()
+				self.approximate()
+				self.answer_spitter()
+				
+		#self.keyword == False and self.polynomial == False
+		else:
+			while 1:
+				if self.answers.count(self.guess) == 0:
+					print "That is a new solution"
+					self.answers.append(self.guess)
+				else:
+					print ("That solution has already been found,\n"
+					"so it will not be added to self.answers.")
+				print "The answers list is {0}".format(self.answers)
+				self.original_variables(sys.argv)
+				self.prompter()
+				self.iterate()
+				self.Newtons_method()
 				self.solution_tester()
 				self.approximate()
 				self.answer_spitter()
@@ -504,15 +533,23 @@ class Solver:
 
 #TODO: arguments 2 3 4 5 6 0.9 give zero division error when the guess isn't complex
 
+#TODO: when they guess a number outside the domain, have it save their answers
+#WHEN THEY ARE COMPLETELY DONE AND EXIT HAVE IT PRINT OUT THERE SOLUTIONS
+
+#TODO: keyword argument errors in reprompt
 
 #Work on the irrational number methods
+
+
+solverObject = Solver(sys.argv)
+solverObject.setter()
 while 1:
 	try:
-		solverObject = Solver(sys.argv)
-		
-		solverObject.setter()
-		#All of these lines only get called once; reprompt handles all the subsequent 
-		#calls.
+		solverObject.__init__(sys.argv)
+		solverObject.original_variables(sys.argv)
+		solverObject.prompter()
+		#All of these lines only get called once; reprompt handles all the
+		#subsequent calls.
 		solverObject.power_rule_substitution()
 		if solverObject.keyword == True:
 			solverObject.expression_creator()
@@ -528,7 +565,8 @@ while 1:
 		#if reprompt hasn't been called yet
 		if solverObject.reprompt_return_value == 1:
 			if solverObject.keyword == False:
-				#If there are no keywords, then the polynomial attribute is created.
+				#If there are no keywords, then the polynomial attribute is
+				#created.
 				solverObject.polynomial_checker()
 				if solverObject.polynomial == True:
 					solverObject.conjugate_tester()
@@ -538,11 +576,15 @@ while 1:
 		solverObject.reprompt()
 		
 	except ZeroDivisionError:
-		print ("Ooops, it looks like your guess was zero or not in\n the "
-		"function's domain. Guess again. Maybe make it complex, real,\n or a "
-		"pure imaginary number. Hit \"control-C\" to exit.\n Please wait....")
-		time.sleep(30)
+		print ("\nERROR MESSAGE:\n\n Oops, it looks like your guess was zero, "
+		"or not in\nthe function's domain. Guess again. Maybe make it complex, "
+		"real,\n or a pure imaginary number. Hit \"control-C\""
+		"to exit.\n Please wait....\n")
+		time.sleep(5)
 		continue
+	except KeyboardInterrupt:
+		print "\n\nYour solutions are {0}\n\nBye".format(solverObject.answers)
+		sys.exit()
 
 
 
