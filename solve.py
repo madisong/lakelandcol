@@ -22,7 +22,8 @@ import time
 class Solver:
 
 	def __init__(self, argv):
-		pass
+		self.reprompt_return_value = 1
+		self.answers = []
 
 	def original_variables(self, argv):
 		#User input; converted to complex type.
@@ -31,7 +32,7 @@ class Solver:
 		self.sum_call_counter = 1
 		self.power_rule_counter = 1
 		self.conjugate_return = int()
-		self.keyword = False
+		#self.keyword = False
 		#Results of substitution
 		self.y = complex()
 		#Results of power_rule
@@ -53,6 +54,16 @@ class Solver:
 	#at indexes (1,2),(3,4), etc.
 	def power_rule_substitution(self):
 		try:
+			self.special_args = self.args
+			a = 1
+			while a <= (len(self.args) -1):
+				self.args[a] = self.args[a].rstrip("*x")
+				print self.args[a]
+				a += 1
+			#print self.args
+			#time.sleep(10)
+			#print self.special_args
+			#time.sleep(10)
 			print "POWER RULE OUTPUT\n"
 			#print "THE LENGTH OF ARGV IS {0}".format( len(self.args) )
 			x = 1
@@ -102,6 +113,7 @@ class Solver:
 					#When  the result is computed, break the for loop, go
 					#back to the while loop and append each result into
 					#new_list.
+					self.keyword = False
 					break
 			
 			#This is supposed to prevent an infinite loop from occuring, while
@@ -124,10 +136,10 @@ class Solver:
 			while i < len(self.args):
 				#The 'r' isn't necessary but it is commonly used to denote a
 				#regular expression pattern.
-				if re.search( r'sin|cos|tan|sec|csc|cot|ln|log|sqrt|e|'
-					'pi', self.args[i]):
+				if re.search( r'sin|cos|tan|sec|csc|cot|ln|log|sqrt|math.e|'
+					'math.pi', self.args[i]):
 						self.keyword = True
-						#print "The keyword \"{0}\" is here.".format(self.args[i])
+						print "The keyword \"{0}\" is here.".format(self.args[i])
 				else:
 					print " \"{0}\" is not a keyword.".format(self.args[i])
 				i += 1
@@ -269,6 +281,7 @@ class Solver:
 		#if there are keywords
 		elif -1e-6 < self.expr.subs(self.x, self.guess) < 1e-6:
 			print "VALID SOLUTION"
+			
 		else:
 			print ( "THE PROGRAM IS LYING TO YOU. Try another guess.\n"
 				"Maybe make it complex (e.g. of the form a+bj)" )
@@ -307,7 +320,9 @@ class Solver:
 	def reprompt(self):
 		print "REPROMPT OUTPUT:\n"
 		self.reprompt_return_value = 0
+		
 		if self.keyword == False and self.polynomial == True:
+			
 			while self.solutions > 0:
 				if self.answers.count(self.guess) == 0:
 					print "That is a new solution"
@@ -331,9 +346,14 @@ class Solver:
 				print "There are %d solutions left.\n" % self.solutions
 				
 				if self.solutions == 0:
-					break
+					sys.exit()
+
+				#Reset all the initial variables.
 				self.original_variables(sys.argv)
+				
+				#Prompt and ask for another guess.
 				self.prompter()
+				
 				#Call iterate to do the essential operations for Newton's method 
 				#again.
 				self.iterate()
@@ -348,13 +368,14 @@ class Solver:
 			#The Fundamental Theorem of Algebra cannot be used, so just keeping
 			#running until the user is done.
 			while 1:
+				print "REPROMPT OUTPUT:"
 				if self.answers.count(self.guess) == 0:
-					print "That is a new solution"
+					print "That is a new solution\n"
 					self.answers.append(self.guess)
 				else:
 					print ("That solution has already been found,\n"
 					"so it will not be added to self.answers.")
-				print "The answers list is {0}".format(self.answers)
+				print "The answers list is {0}\n".format(self.answers)
 				self.original_variables(sys.argv)
 				self.prompter()
 				self.expression_creator()
@@ -367,6 +388,7 @@ class Solver:
 		#self.keyword == False and self.polynomial == False
 		else:
 			while 1:
+				print "REPROMPT OUTPUT:"
 				if self.answers.count(self.guess) == 0:
 					print "That is a new solution"
 					self.answers.append(self.guess)
@@ -389,11 +411,10 @@ class Solver:
 		print "ANSWER_SPITTER OUTPUT:\n"
 		#If the imaginary part exists and all the coeffcients are real, 
 		#then the conjugate also exists.
-		if ( (self.guess.imag != 0 or self.guess.imag < -1e-6 or 
-			self.guess.imag > 1e-6) and self.conjugate_return != 1 ):
+		print "The answer is {0}".format(self.guess)
+		if ( (self.guess.imag < -1e-6 or self.guess.imag > 1e-6) and
+		self.conjugate_return != 1 ):
 			
-			#print "This is a pure imaginary answer\n"
-			print "The answer is {0}".format(self.guess)
 			print "and the conjugate answer is {0} \n".format( -1*self.guess)
 			self.conjugate = True
 		else:
@@ -403,9 +424,8 @@ class Solver:
 
 	#This is a work around; it sets variables that will only be reset once and
 	#never again.
-	def setter(self):
-		self.reprompt_return_value = 1
-		self.answers = []
+	#def setter(self):
+
 	
 	#If a polynomial has rational coefficients, and (a - sqrt(b)) is a root, 
 	#then (a + sqrt(b)) is a root.
@@ -460,7 +480,7 @@ class Solver:
 	def conjugate_tester(self):
 		print "CONJUGATE OUTPUT:\n"
 		#Checks whether all of the coefficients are real, if not, this method
-		# a condition in number_of_roots, and a condition in answer_spitter
+		#a condition in number_of_roots, and a condition in answer_spitter
 		#doesn't apply.
 		#Default value is 0.
 		self.i = 1
@@ -471,7 +491,7 @@ class Solver:
 			if complex(self.args[self.i]).imag != 0:
 				print "Not all coeffcients are real\n"
 				self.conjugate_return = 1
-				return 1
+				return
 			self.argcounter -= 1
 			if self.argcounter == 0:
 				break
@@ -525,31 +545,29 @@ class Solver:
 		print "All coeffiecients are rational"
 
 
-#The arguments 1 2 1 0 give ZeroDivisionError when the guess = 1, but works
-#correctly when the guess = 1j
+#TODO: USE SPECIAL_SELF.ARGS WHEN THERE ARE KEYWORDS AND SELF.ARGS WHEN THERE
+#AREN'T KEYWORDS
 
-#SOMETIMES WHEN THE GUESS IS CLOSE TO 0 IT GIVES A COMPLEX SOLUTION, LIKE WITH
-#ARGUMENTS 1 0.5 -15 3
-
-#TODO: arguments 2 3 4 5 6 0.9 give zero division error when the guess isn't complex
-
-#TODO: when they guess a number outside the domain, have it save their answers
-#WHEN THEY ARE COMPLETELY DONE AND EXIT HAVE IT PRINT OUT THERE SOLUTIONS
-
-#TODO: keyword argument errors in reprompt
+#TODO: STORE THE ORIGINAL SELF.ARGS, THE LIST WITH THE "*x" IN SPECIAL_SELF.ARGS
+#AND KEEP IT SEPARATE FROM SELF.ARGS, WHICH HAS THE "*x" STRIPPED
 
 #Work on the irrational number methods
 
-
+#Object creation is separate because there are variables within __init__ that
+#only need to be reset once, whereas, the variables in original_variables need
+#to be reset each time.
 solverObject = Solver(sys.argv)
-solverObject.setter()
+#solverObject.setter()
 while 1:
 	try:
-		solverObject.__init__(sys.argv)
+		#solverObject.__init__(sys.argv)
 		solverObject.original_variables(sys.argv)
 		solverObject.prompter()
 		#All of these lines only get called once; reprompt handles all the
 		#subsequent calls.
+		
+		#power_rule_substitution is called every time, because self.keyword
+		#gets reset by original_variables every time.
 		solverObject.power_rule_substitution()
 		if solverObject.keyword == True:
 			solverObject.expression_creator()
@@ -589,27 +607,3 @@ while 1:
 
 
 #Useless code, right now:
-
-
-#Pseudocode
-
-"""
-
-
-Define the derivative of the equation
-
-print "Now take a guess, your guess must be close to what the solution actually is"
-
-**They guess**
-
-Process ( guess - (equation)/(derivative) ) in a loop a high number of times, for a high degree of accuracy    **Newton's Method**
-
-Store solution
-
-print "Your solution is", solution
-
-Repeat this process until all solutions are found    If the highest degree is an integer, then the number of solutions will equal this integer (when double roots are included)
-
-print "Your solutions are:", solution1, solution2, solution3....solution-N  **Possibly in a column**
-
-"""
