@@ -24,14 +24,15 @@ class Solver:
 	def __init__(self, argv):
 		self.reprompt_return_value = 1
 		self.answers = []
+		self.conjugate_return = 1
 
+		
 	def original_variables(self, argv):
 		#User input; converted to complex type.
 		#Initial coefficients and powers.
 		self.args = argv
 		self.sum_call_counter = 1
 		self.power_rule_counter = 1
-		self.conjugate_return = int()
 		#self.keyword = False
 		#Results of substitution
 		self.y = complex()
@@ -54,15 +55,20 @@ class Solver:
 	#at indexes (1,2),(3,4), etc.
 	def power_rule_substitution(self):
 		try:
-			self.special_args = self.args
+			self.special_args = []
+			a = 0
+			b = 0
+			while b <= (len(self.args) - 1):
+				self.special_args.append(self.args[a])
+				b += 1
+				a += 1
 			a = 1
-			while a <= (len(self.args) -1):
+			while a <= (len(self.args) - 1):
 				self.args[a] = self.args[a].rstrip("*x")
 				print self.args[a]
 				a += 1
-			#print self.args
-			#time.sleep(10)
-			#print self.special_args
+			print self.special_args
+			print self.args
 			#time.sleep(10)
 			print "POWER RULE OUTPUT\n"
 			#print "THE LENGTH OF ARGV IS {0}".format( len(self.args) )
@@ -99,7 +105,7 @@ class Solver:
 					#The call is even.
 					if self.power_rule_counter % 2 == 0:
 						#Substitution, no power rule operation.
-						self.y = complex( self.args[self.i-1] ) * self.guess ** ( 
+						self.y = complex( self.args[self.i-1] ) * self.guess **( 
 							complex( self.args[self.i] ) )
 						
 						print "self.y is {0}".format(self.y)
@@ -128,34 +134,38 @@ class Solver:
 		
 		except ValueError as e:
 			print 'The error is "{0}"'.format(e)
-			print self.args
-			i = 1
 			#If any of the following keywords are found within argv use sympy 
 			#methods.
 			#print len(self.args)
-			while i < len(self.args):
+			while i < len(self.special_args):
 				#The 'r' isn't necessary but it is commonly used to denote a
 				#regular expression pattern.
 				if re.search( r'sin|cos|tan|sec|csc|cot|ln|log|sqrt|math.e|'
-					'math.pi', self.args[i]):
+					'math.pi', self.special_args[i]):
 						self.keyword = True
-						print "The keyword \"{0}\" is here.".format(self.args[i])
+						print ( "The keyword \"{0}\" is here."
+						.format(self.special_args[i]) )
 				else:
-					print " \"{0}\" is not a keyword.".format(self.args[i])
+					print ( " \"{0}\" is not a keyword."
+						.format(self.special_args[i]) )
+
 				i += 1
+				
 	#Creates sympy object.
 	def expression_creator(self):
 		self.x = symbols('x')
 		if self.keyword == True:
 			x = 1
-			argcounter = ( (len(self.args)) - 1 )/ 2
+			argcounter = ( (len(self.special_args)) - 1 )/ 2
 			self.expression_string = ""
 			while argcounter > 0:
 				i = 2*x
 				x += 1
 				#Creates the first part of a string using sympy syntax; it will
 				#soon be turned into a sympy object.
-				term = "{0}**{1}+".format(self.args[i-1], self.args[i])
+				term = ( "{0}**{1}+".
+					format(self.special_args[i-1], self.special_args[i]) )
+
 				#Continuosly add terms to the string.
 				self.expression_string += term
 				#print self.expression_string
@@ -273,20 +283,27 @@ class Solver:
 			
 				( -1e-6 < self.sum.imag < 1e-6 ) ):
 			
-				print "VALID SOLUTION"			
+				print "VALID SOLUTION"
+
 			else:
 				print ( "THE PROGRAM IS LYING TO YOU. Try another guess.\n"
-				"Maybe make it complex (e.g. of the form a+bj)" )
+				"Maybe make it complex (e.g. of the form a+bj)\n\n Your "
+				"current solutions are:\n\n {0}".format(self.answers) )
+
 				sys.exit()
+
 		#if there are keywords
 		elif -1e-6 < self.expr.subs(self.x, self.guess) < 1e-6:
 			print "VALID SOLUTION"
 			
 		else:
 			print ( "THE PROGRAM IS LYING TO YOU. Try another guess.\n"
-				"Maybe make it complex (e.g. of the form a+bj)" )
+			"Maybe make it complex (e.g. of the form a+bj)\n\n Your "
+			"current solutions are:\n\n {0}".format(self.answers) )
+
 			sys.exit()
-			
+
+
 	#IS THERE A CLEANER WAY OF WRITING THIS METHOD?
 	#If both parts of the solution or one part are tiny, then they default to 
 	#zero.
@@ -329,7 +346,7 @@ class Solver:
 					self.answers.append(self.guess)
 					self.solutions -= 1
 						
-					if self.conjugate == True:
+					if self.conjugate_return != 1 and self.guess.imag != 0:
 						print "The conjugate is also a new solution."
 						self.answers.append( complex(self.guess.real, 
 							-1*self.guess.imag) )
@@ -406,17 +423,14 @@ class Solver:
 
 
 	def answer_spitter(self):
-		#Default bool value is False.
-		self.conjugate = False
 		print "ANSWER_SPITTER OUTPUT:\n"
 		#If the imaginary part exists and all the coeffcients are real, 
 		#then the conjugate also exists.
 		print "The answer is {0}".format(self.guess)
-		if ( (self.guess.imag < -1e-6 or self.guess.imag > 1e-6) and
-		self.conjugate_return != 1 ):
-			
+		
+		if self.conjugate_return != 1 and self.guess.imag != 0:
 			print "and the conjugate answer is {0} \n".format( -1*self.guess)
-			self.conjugate = True
+
 		else:
 			print ("This solution doesn't have an imaginary part, so it has "
 			"no\nconjugate answer.")
@@ -490,7 +504,6 @@ class Solver:
 			print "The coefficients are:{0} \n".format(self.args[self.i])
 			if complex(self.args[self.i]).imag != 0:
 				print "Not all coeffcients are real\n"
-				self.conjugate_return = 1
 				return
 			self.argcounter -= 1
 			if self.argcounter == 0:
@@ -499,6 +512,7 @@ class Solver:
 			#self.i is always odd
 			self.i = 2*m + 1
 		print "All coeffcients are real."
+		self.conjugate_return = 0
 
 	def number_of_roots(self):
 		print "ROOT_NUMBER OUTPUT:\n"
@@ -590,6 +604,7 @@ while 1:
 					solverObject.conjugate_tester()
 					solverObject.number_of_roots()
 				#solverObject.irrational_coefficient_checker()
+		print "HELLO WORLD"
 		solverObject.answer_spitter()
 		solverObject.reprompt()
 		
@@ -601,7 +616,9 @@ while 1:
 		time.sleep(5)
 		continue
 	except KeyboardInterrupt:
-		print "\n\nYour solutions are {0}\n\nBye".format(solverObject.answers)
+		print ( "\n\nYour solutions are:\n\n {0}\n\nBye"
+			.format(solverObject.answers) )
+
 		sys.exit()
 
 
