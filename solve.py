@@ -22,7 +22,7 @@ class Solver:
 	def __init__(self, argv):
 		self.reprompt_return_value = 1
 		self.answers = []
-		self.conjugate_return = 1
+		self.real_coefficents = False
 
 		
 	def original_variables(self, argv):
@@ -41,11 +41,16 @@ class Solver:
 		self.powers = []	
 
 	def prompter(self):
-		print ("Hello, welcome to Collin's solver program!\n"
+		print ( "Hello, welcome to Collin's solver program!\n"
 		"Note, your equation must be set equal to zero,\n"
 		"and your guess must be fairly close to the root.\n" 
 		"If you think a root is zero, then guess close to\n"
-		"zero, but not actually zero.\n")
+		"zero, but not actually zero.\n\n" 
+		"Enter the coefficients and corresponding powers of your equation.\n"
+		"Make sure each equation has \"*x\" attached to it\n"
+		"if it doesn\'t already.\nA backslash should preceed any parentheses.\n\n"
+		"For example, 3x^2 + tan(3x) -4 would be entered in as:\n"
+		"3*x 2 tan\(3*x\) 1 -4*x 0")
 		self.guess = complex(input("Take a guess: "))
 
 	
@@ -344,7 +349,9 @@ class Solver:
 					self.answers.append(self.guess)
 					self.solutions -= 1
 						
-					if self.conjugate_return != 1 and self.guess.imag != 0:
+					if ( self.real_coefficents == True and 
+						self.guess.conjugate() != self.guess ):
+						
 						print "The conjugate is also a new solution."
 						self.answers.append( complex(self.guess.real, 
 							-1*self.guess.imag) )
@@ -426,7 +433,9 @@ class Solver:
 		#then the conjugate also exists.
 		print "The answer is {0}".format(self.guess)
 		
-		if self.conjugate_return != 1 and self.guess.imag != 0:
+		if (self.real_coefficents == True and
+			self.guess.conjugate() != self.guess):
+			
 			print "and the conjugate answer is {0} \n".format( -1*self.guess)
 
 		else:
@@ -489,7 +498,7 @@ class Solver:
 
 	#Uses the complex conjugate theorem: if a + b*j is a root, then a - b*j
 	#is also a root.
-	def conjugate_tester(self):
+	def real_coefficent_tester(self):
 		print "CONJUGATE OUTPUT:\n"
 		#Checks whether all of the coefficients are real, if not, this method
 		#a condition in number_of_roots, and a condition in answer_spitter
@@ -510,7 +519,7 @@ class Solver:
 			#self.i is always odd
 			self.i = 2*m + 1
 		print "All coeffcients are real."
-		self.conjugate_return = 0
+		self.real_coefficents = True
 
 	def number_of_roots(self):
 		print "ROOT_NUMBER OUTPUT:\n"
@@ -523,7 +532,7 @@ class Solver:
 		#If the leading power of a polynomial is odd and it has real 
 		#coefficients, then it has at least one real root.
 		
-		if self.conjugate_return != 1 and self.solutions % 2 != 0:
+		if self.real_coefficents == True and self.solutions % 2 != 0:
 		#I know I could have the condition like this, but is there anyway to
 		#supress the output?
 		#if self.complex_conjugate() != 1 and self.solutions % 2 != 0:
@@ -599,10 +608,9 @@ while 1:
 				#created.
 				solverObject.polynomial_checker()
 				if solverObject.polynomial == True:
-					solverObject.conjugate_tester()
+					solverObject.real_coefficent_tester()
 					solverObject.number_of_roots()
 				#solverObject.irrational_coefficient_checker()
-		print "HELLO WORLD"
 		solverObject.answer_spitter()
 		solverObject.reprompt()
 		
