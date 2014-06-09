@@ -10,8 +10,6 @@ import numbers
 #cmath module allows for complex operations and solutions
 import cmath
 import math
-#sympy module allows for symbolic manipulation, and differentiation of special
-#mathematical functions.
 from sympy import *
 import re
 import sys
