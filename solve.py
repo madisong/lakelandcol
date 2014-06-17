@@ -14,6 +14,10 @@ from sympy import *
 import re
 import sys
 import time
+import pygame
+import os
+
+
 
 #The imaginary number i = (-1)^0.5 = j in Python.
 #Any number with a j appended to it is treated as a complex number by Python.
@@ -22,9 +26,9 @@ class Solver:
 	def __init__(self, argv):
 		self.reprompt_return_value = 1
 		self.answers = []
-		self.real_coefficents = False
+		self.real_coefficients = False
 
-		
+	
 	def original_variables(self, argv):
 		#User input; converted to complex type.
 		#Initial coefficients and powers.
@@ -38,7 +42,7 @@ class Solver:
 		self.o = complex()
 		self.power_rule_list = [0]
 		self.list_without_power_rule_operation = [0]
-		self.powers = []	
+		self.powers = []
 
 	def prompter(self):
 		print ( "Hello, welcome to Collin's solver program!\n"
@@ -292,7 +296,11 @@ class Solver:
 				print ( "THE PROGRAM IS LYING TO YOU. Try another guess.\n"
 				"Maybe make it complex (e.g. of the form a+bj)\n\n Your "
 				"current solutions are:\n\n {0}".format(self.answers) )
-
+				pygame.mixer.init()
+			
+				sound = pygame.mixer.Sound("NO.wav")	
+				sound.play()
+				time.sleep(1)
 				sys.exit()
 
 		#if there are keywords
@@ -303,6 +311,11 @@ class Solver:
 			print ( "THE PROGRAM IS LYING TO YOU. Try another guess.\n"
 			"Maybe make it complex (e.g. of the form a+bj)\n\n Your "
 			"current solutions are:\n\n {0}".format(self.answers) )
+			pygame.mixer.init()
+			
+			sound = pygame.mixer.Sound("NO.wav")	
+			sound.play()
+			time.sleep(1)
 
 			sys.exit()
 
@@ -338,18 +351,22 @@ class Solver:
 		self.sum_method(self.power_rule_list)
 
 	def reprompt(self):
-		print "REPROMPT OUTPUT:\n"
 		self.reprompt_return_value = 0
 		
 		if self.keyword == False and self.polynomial == True:
 			
 			while self.solutions > 0:
+				print "REPROMPT OUTPUT:\n"		
 				if self.answers.count(self.guess) == 0:
+					pygame.mixer.init()
+			
+					sound = pygame.mixer.Sound("ding.wav")	
+					sound.play()
 					print "That is a new solution"
 					self.answers.append(self.guess)
 					self.solutions -= 1
 						
-					if ( self.real_coefficents == True and 
+					if ( self.real_coefficients == True and 
 						self.guess.conjugate() != self.guess ):
 						
 						print "The conjugate is also a new solution."
@@ -362,9 +379,12 @@ class Solver:
 				else:
 					print ("That solution has already been found,\n"
 					"so it will not be added to self.answers.")
-				print "The answers list is {0}".format(self.answers)
+					pygame.mixer.init()
+			
+					sound = pygame.mixer.Sound("NO.wav")	
+					sound.play()
+				print "The answers list is {0}\n".format(self.answers)
 	
-				print "REPROMPT OUTPUT:\n"
 				print "There are %d solutions left.\n" % self.solutions
 				
 				if self.solutions == 0:
@@ -392,11 +412,19 @@ class Solver:
 			while 1:
 				print "REPROMPT OUTPUT:"
 				if self.answers.count(self.guess) == 0:
+					pygame.mixer.init()
+			
+					sound = pygame.mixer.Sound("ding.wav")	
+					sound.play()
 					print "That is a new solution\n"
 					self.answers.append(self.guess)
 				else:
 					print ("That solution has already been found,\n"
 					"so it will not be added to self.answers.")
+					pygame.mixer.init()
+			
+					sound = pygame.mixer.Sound("NO.wav")	
+					sound.play()
 				print "The answers list is {0}\n".format(self.answers)
 				self.original_variables(sys.argv)
 				self.prompter()
@@ -410,14 +438,22 @@ class Solver:
 		#self.keyword == False and self.polynomial == False
 		else:
 			while 1:
-				print "REPROMPT OUTPUT:"
+				print "REPROMPT OUTPUT:\n"
 				if self.answers.count(self.guess) == 0:
+					pygame.mixer.init()
+			
+					sound = pygame.mixer.Sound("ding.wav")	
+					sound.play()
 					print "That is a new solution"
 					self.answers.append(self.guess)
 				else:
 					print ("That solution has already been found,\n"
 					"so it will not be added to self.answers.")
-				print "The answers list is {0}".format(self.answers)
+					pygame.mixer.init()
+			
+					sound = pygame.mixer.Sound("NO.wav")	
+					sound.play()
+				print "The answers list is {0}\n".format(self.answers)
 				self.original_variables(sys.argv)
 				self.prompter()
 				self.iterate()
@@ -433,7 +469,7 @@ class Solver:
 		#then the conjugate also exists.
 		print "The answer is {0}".format(self.guess)
 		
-		if (self.real_coefficents == True and
+		if (self.real_coefficients == True and
 			self.guess.conjugate() != self.guess):
 			
 			print "and the conjugate answer is {0} \n".format( -1*self.guess)
@@ -519,7 +555,7 @@ class Solver:
 			#self.i is always odd
 			self.i = 2*m + 1
 		print "All coeffcients are real."
-		self.real_coefficents = True
+		self.real_coefficients = True
 
 	def number_of_roots(self):
 		print "ROOT_NUMBER OUTPUT:\n"
@@ -532,7 +568,7 @@ class Solver:
 		#If the leading power of a polynomial is odd and it has real 
 		#coefficients, then it has at least one real root.
 		
-		if self.real_coefficents == True and self.solutions % 2 != 0:
+		if self.real_coefficients == True and self.solutions % 2 != 0:
 		#I know I could have the condition like this, but is there anyway to
 		#supress the output?
 		#if self.complex_conjugate() != 1 and self.solutions % 2 != 0:
@@ -622,7 +658,7 @@ while 1:
 		time.sleep(5)
 		continue
 	except KeyboardInterrupt:
-		print ( "\n\nYour solutions are:\n\n {0}\n\nBye"
+		print ( "\n\nYour solutions are:\n\n{0}\n\nBye"
 			.format(solverObject.answers) )
 
 		sys.exit()
