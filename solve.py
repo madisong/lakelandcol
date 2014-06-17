@@ -62,21 +62,22 @@ class Solver:
 	#at indexes (1,2),(3,4), etc.
 	def power_rule_substitution(self):
 		try:
+			#self.special_args is a duplicate of self.args, but the coefficients
+			#don't have the "*x" stripped, so that sympy can work with that data
 			self.special_args = []
 			a = 0
 			b = 0
-			while b <= (len(self.args) - 1):
-				self.special_args.append(self.args[a])
-				b += 1
-				a += 1
-			a = 1
 			while a <= (len(self.args) - 1):
+				self.special_args.append(self.args[a])
 				self.args[a] = self.args[a].rstrip("*x")
-				print self.args[a]
+				#print self.args[a]
+				#b += 1
 				a += 1
-			print self.special_args
-			print self.args
-			#time.sleep(10)
+			#a = 1
+			#while a <= (len(self.args) - 1):
+				#self.args[a] = self.args[a].rstrip("*x")
+				#print self.args[a]
+				#a += 1
 			print "POWER RULE OUTPUT\n"
 			#print "THE LENGTH OF ARGV IS {0}".format( len(self.args) )
 			x = 1
@@ -144,40 +145,35 @@ class Solver:
 			#If any of the following keywords are found within argv use sympy 
 			#methods.
 			#print len(self.args)
-			while i < len(self.special_args):
+			for elements in self.special_args:
 				#The 'r' isn't necessary but it is commonly used to denote a
 				#regular expression pattern.
 				if re.search( r'sin|cos|tan|sec|csc|cot|ln|log|sqrt|math.e|'
-					'math.pi', self.special_args[i]):
+					'math.pi', elements):
 						self.keyword = True
 						print ( "The keyword \"{0}\" is here."
-						.format(self.special_args[i]) )
+						.format(elements) )
 				else:
 					print ( " \"{0}\" is not a keyword."
-						.format(self.special_args[i]) )
-
-				i += 1
-				
+						.format(elements) )
 	#Creates sympy object.
 	def expression_creator(self):
 		self.x = symbols('x')
-		if self.keyword == True:
-			x = 1
-			argcounter = ( (len(self.special_args)) - 1 )/ 2
-			self.expression_string = ""
-			while argcounter > 0:
-				i = 2*x
-				x += 1
-				#Creates the first part of a string using sympy syntax; it will
-				#soon be turned into a sympy object.
-				term = ( "{0}**{1}+".
-					format(self.special_args[i-1], self.special_args[i]) )
-
-				#Continuosly add terms to the string.
-				self.expression_string += term
-				#print self.expression_string
-				argcounter -= 1
-				#print argcounter
+		x = 1
+		argcounter = ( (len(self.special_args)) - 1 )/ 2
+		self.expression_string = ""
+		while argcounter > 0:
+			i = 2*x
+			x += 1
+			#Creates the first part of a string using sympy syntax.
+			term = ( "{0}**{1}+"
+				.format(self.special_args[i-1], self.special_args[i]) )
+	
+			#Continuosly add terms to the string.
+			self.expression_string += term
+			#print self.expression_string
+			argcounter -= 1
+			#print argcounter
 
 		#Strip the "+" on the end of the string.
 		self.expression_string = self.expression_string.rstrip("+")
@@ -207,23 +203,18 @@ class Solver:
 		a = 2
 		n = len(data_list) - 1
 		print "LENGTH - 1 IS %d" % n
-		
+		print self.power_rule_list
 		#Add the first two elements.
 		#complex is used because you could have complex numbers as input and
 		#the elements must be converted from strings.
 		self.sum = complex(data_list[a-1]) + complex(data_list[a])
 		
 		print "the initial sum is", self.sum
-		while a <= n:
+		while a < n:
+			print a
 			a += 1
-			#print "a is %d in sum" % a	
-			#When a = n, then a = a+1, which is out of the list range. 
-			#This prevents it from erroring.
-			if a > n:
-				print "a is greater than n in sum"
-				break
 			self.sum = ( self.sum + complex(data_list[a]) )
-		
+			#time.sleep(2)
 		#self.sum_call_counter is odd
 		if self.sum_call_counter % 2 != 0:
 			print "sum_counter is odd %d" % self.sum_call_counter
@@ -270,7 +261,7 @@ class Solver:
 	def solution_tester(self):
 		print "SOLUTION TESTER OUTPUT:\n"
 		if self.keyword == False:
-			#print "The power_rule counter is", self.power_rule_counter
+
 			#As long as Newton's method is called 1001 times
 			#self.power_rule_counter will always be 2005.
 			#Add 1 to it so when power_rule_substitution is called
@@ -536,10 +527,8 @@ class Solver:
 	#is also a root.
 	def real_coefficent_tester(self):
 		print "CONJUGATE OUTPUT:\n"
-		#Checks whether all of the coefficients are real, if not, this method
-		#a condition in number_of_roots, and a condition in answer_spitter
-		#doesn't apply.
-		#Default value is 0.
+		#If this returns, then a condition in number_of_roots, and a condition
+		 #in answer_spitter doesn't apply. Default value is 0.
 		self.i = 1
 		m = 0
 		self.argcounter = (len(self.args) - 1 )/2
@@ -602,11 +591,7 @@ class Solver:
 		print "All coeffiecients are rational"
 
 
-#TODO: USE SPECIAL_SELF.ARGS WHEN THERE ARE KEYWORDS AND SELF.ARGS WHEN THERE
-#AREN'T KEYWORDS
-
-#TODO: STORE THE ORIGINAL SELF.ARGS, THE LIST WITH THE "*x" IN SPECIAL_SELF.ARGS
-#AND KEEP IT SEPARATE FROM SELF.ARGS, WHICH HAS THE "*x" STRIPPED
+#TODO: REFACTOR solution_tester
 
 #Work on the irrational number methods
 
