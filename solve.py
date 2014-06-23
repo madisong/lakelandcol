@@ -233,7 +233,9 @@ class Solver:
 			self.list_without_power_rule_operation = [0]
 		#Rounding is used to prevent the appendation of answers that have tiny
 		#differences
-		self.guess = complex( round(self.guess.real, 7), round(self.guess.imag, 7) )
+		self.guess = ( complex(round(self.guess.real, 7),
+			round(self.guess.imag, 7)) )
+
 		print "THE FINAL RESULT OF NEWTON'S METHOD IS: {0}\n".format(self.guess)
 
 	#Tests whether or not the result of Newton's Method is an actual solution 
@@ -358,8 +360,8 @@ class Solver:
 				#Call iterate to do the essential operations for Newton's method 
 				#again.
 				self.iterate()
-				#Call Newton's method to work with the newly created data, and call
-				#iterate a thousand more times.
+				#Call Newton's method to work with the newly created data, and
+				#call iterate a thousand more times.
 				self.Newtons_method()
 				self.solution_tester()
 				self.approximate()
@@ -444,8 +446,8 @@ class Solver:
 			b += 1
 		self.polynomial = True
 
-	#Tests to see if the complex conjugate theorem (if a + b*j is a root, then a - b*j
-	#is also a root.) can be applied.
+	#Tests to see if the complex conjugate theorem (if a + b*j is a root,
+	#then a - b*j is also a root.) can be applied.
 	def real_coefficent_tester(self):
 		
 		print "REAL_COEFFICIENT_TESTER OUTPUT:\n"
@@ -518,8 +520,9 @@ while 1:
 	try:
 		solverObject.original_variables(sys.argv)
 		solverObject.prompter()
-		#All of these lines only get called once (if it doesn't error, otherwise they will get called more than once)
-		#;reprompt handles all the subsequent calls.
+		#All of these lines only get called once (if it doesn't error,
+		#otherwise they will get called more than once);reprompt handles all
+		#the subsequent calls.
 
 		solverObject.power_rule_substitution()
 		if solverObject.keyword == True:
