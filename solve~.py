@@ -10,12 +10,12 @@ from decimal import *
 #cmath module allows for complex operations and solutions
 import cmath
 import math
-from sympy import *
 import re
 import sys
 import time
 import pygame
 import os
+import special
 
 
 
@@ -33,13 +33,12 @@ class Solver:
 		#User input; initial coefficients and powers.
 		self.args = argv
 		self.power_rule_counter = 1
-		#Only used within sum_method, but it is necessary that it not be set
+		#Only called within sum_method, but it is necessary that it not be set
 		#to its initial value in that method.
 		self.sum_call_counter = 1
 		self.power_rule_list = [0]
 		self.list_without_power_rule_operation = [0]
 		self.powers = []
-		self.valid = True
 
 	def prompter(self):
 		print ( "Hello, welcome to Collin's solver program!\n"
@@ -48,10 +47,10 @@ class Solver:
 		"If you think a root is zero, then guess close to\n"
 		"zero, but not actually zero.\n\n" 
 		"Enter the coefficients and corresponding powers of your equation.\n"
-		"Make sure each term in the equation has \"*x\" attached to it.\n"
-		"A backslash should preceed any parentheses.\n\n"
+		"Make sure each equation has \"*x\" attached to it\n"
+		"if it doesn\'t already.\nA backslash should preceed any parentheses.\n\n"
 		"For example, 3x^2 + tan(3x) -4 would be entered in as:\n"
-		"3*x 2 tan\(3*x\)*x 0 -4*x 0")
+		"3*x 2 tan\(3*x\) 1 -4*x 0")
 		self.guess = complex(input("Take a guess: "))
 
 	
@@ -75,51 +74,61 @@ class Solver:
 
 				a += 1
 			print "POWER RULE OUTPUT\n"
+			#print "THE LENGTH OF ARGV IS {0}".format( len(self.args) )
 			x = 1
 			#Initial index value
 			i = 2
 			#Subtract initial argument, the program name, and divide it
 			#by 2 to get the correct iterations
 			self.argcounter = (len(self.args) - 1) / 2
-
+			
+			#For results of power_rule. 0 is a placeholder in this list
+			
 			while self.argcounter > 0:
-				#for arg in self.args:
+				#Stop appending once argcounter = 0.
+				#if self.argcounter == 0:
+					#break
+				for arg in self.args:
 					#print "p is", complex(self.args[self.i])
 					#print "c is", complex(self.args[self.i-1])
 					#print "x is", x
 					#print "self.args index is %d" % self.i				
 			
-				#The call is odd.
-				if self.power_rule_counter % 2 != 0:
-					#Power rule operation
-					#power * (corresponding coefficient * guess ^ (power - 1))
-					o = complex(self.args[i]) * (
-						complex(self.args[i-1]) * self.guess ** 
-						(complex(self.args[i]) - 1 ) )
-					
-					print "o is {0}".format(o)
-					self.power_rule_list.append(o)
-
-				#The call is even.
-				if self.power_rule_counter % 2 == 0:
-					#Substitution, no power rule operation.
-					y = complex( self.args[i-1] ) * self.guess **( 
-						complex( self.args[i] ) )
-					
-					print "y is {0}".format(y)
-					self.list_without_power_rule_operation.append(y)
-				x += 1
-				#Power elements
-				i = 2*x
-				self.argcounter -= 1
-				#print "argcounter is %d" % self.argcounter
-				self.keyword = False
+					#The call is odd.
+					if self.power_rule_counter % 2 != 0:
+						#Power rule operation
+						#power * (corresponding coefficient * guess ^ (power - 1))
+						o = complex(self.args[i]) * (
+							complex(self.args[i-1]) * self.guess ** 
+							(complex(self.args[i]) - 1 ) )
+						
+						print "o is {0}".format(o)
+						self.power_rule_list.append(o)
+	
+					#The call is even.
+					if self.power_rule_counter % 2 == 0:
+						#Substitution, no power rule operation.
+						y = complex( self.args[i-1] ) * self.guess **( 
+							complex( self.args[i] ) )
+						
+						print "y is {0}".format(y)
+						self.list_without_power_rule_operation.append(y)
+					x += 1
+					#Power elements
+					i = 2*x
+					self.argcounter -= 1
+					#print "argcounter is %d" % self.argcounter
+					#When  the result is computed, break the for loop, go
+					#back to the while loop and append each result into
+					#new_list.
+					self.keyword = False
+					break
 			
 			#This is supposed to prevent an infinite loop from occuring, while
 			#allowing self.power_rule_substitution to be called a second time.
 			if self.power_rule_counter % 2 != 0:
+				#Do not change the order.
 				
-				#Do not change the order.				
 				self.power_rule_counter += 1
 				self.power_rule_substitution()
 			else:
@@ -141,47 +150,10 @@ class Solver:
 							.format(elements) )
 				else:
 					print ( " \"{0}\" is not a keyword.".format(elements) )
-	#Creates sympy object.
-	def expression_creator(self):
-		self.x = symbols('x')
-		x = 1
-		argcounter = ( (len(self.special_args)) - 1 )/ 2
-		self.expression_string = ""
-		while argcounter > 0:
-			i = 2*x
-			x += 1
-			#Creates the first part of a string using sympy syntax.
-			term = ( "{0}**{1}+"
-				.format(self.special_args[i-1], self.special_args[i]) )
-	
-			#Continuosly add terms to the string.
-			self.expression_string += term
-			#print self.expression_string
-			argcounter -= 1
-			#print argcounter
-
-		#Strip the "+" on the end of the string.
-		self.expression_string = self.expression_string.rstrip("+")
-		print self.expression_string
-		self.expr = sympify(self.expression_string)
-		
-	#Finds the derivative of the expression, and performs Newtons method on the
-	#expression 1001 times.
-	def special_Newtons_method(self):
-		derivative = diff(self.expr, self.x)
-		n = 1
-		while n <= 1000:
-			#"subs" substitutes in the self.guess for the deifned symbol x.
-			self.guess -= ( self.expr.subs(self.x, self.guess) /
-
-				( derivative.subs(self.x, self.guess) ) )
-			n += 1
-		print "The final result of the SPECIAL Newton\'s method is", self.guess
-		self.guess = round(self.guess, 7)
 
 
 	#This sums all the elements in self.list_without_power_rule_operation and
-	#sums all the elements in self.power_rule_list.
+	#sums all the elements in self.substitution_list_sum.
 	def sum_method(self, data_list):
 		print "SUM METHOD OUTPUT:\n"
 		a = 2
@@ -222,7 +194,7 @@ class Solver:
 		print "NEWTON OUTPUT:\n"
 		n = 0
 		while n <= 1000:
-			self.guess -= (
+			self.guess = ( self.guess - 
 				(self.substitution_list_sum/self.power_rule_list_sum) )
 			n += 1                                                 
 			#Repeat the process using the new self.guess, do this 1001 times
@@ -250,6 +222,7 @@ class Solver:
 			#Add 1 to it so when power_rule_substitution is called
 			#the final self.guess is substituted in.
 			self.power_rule_counter += 1
+			#print "Now the counter is {0}".format(self.power_rule_counter)
 			#Cleaner way of doing this?
 			self.list_without_power_rule_operation = [0]
 			self.power_rule_substitution()
@@ -263,16 +236,23 @@ class Solver:
 				( -1e-6 < self.sum.imag < 1e-6 ) ):
 			
 				print "VALID SOLUTION"
-			else:
-				self.valid = False
 
 		#if there are keywords
 		elif (-1e-6 < self.expr.subs(self.x, self.guess) < 1e-6 ):
 			print self.expr.subs(self.x,self.guess)
 			print "VALID SOLUTION"
 			time.sleep(5)
+
 		else:
-			self.valid = False
+			print ( "THE PROGRAM IS LYING TO YOU. Try another guess.\n"
+			"Maybe make it complex (e.g. of the form a+bj)\n\n Your "
+			"current solutions are:\n\n {0}".format(self.answers) )
+			pygame.mixer.init()
+	
+			sound = pygame.mixer.Sound("NO.wav")	
+			sound.play()	
+			sys.exit()
+		#time.sleep(5)
 
 	#If both parts of the solution or one part are tiny, then they default to 
 	#zero.
@@ -310,7 +290,7 @@ class Solver:
 			
 			while self.solutions > 0:
 				os.system("clear")
-				if self.valid == True and self.answers.count(self.guess) == 0:
+				if self.answers.count(self.guess) == 0:
 					pygame.mixer.init()
 			
 					sound = pygame.mixer.Sound("ding.wav")	
@@ -328,16 +308,6 @@ class Solver:
 						self.solutions -= 1
 					else:
 						print "The conjugate is not unique."
-
-				elif self.valid == False:
-					print ( "THE PROGRAM IS LYING TO YOU. Try another guess.\n"
-						"Maybe make it complex (e.g. of the form a+bj)\n\n Your"
-						" current solutions are:\n\n {0}".format(self.answers) )
-					pygame.mixer.init()
-			
-					sound = pygame.mixer.Sound("NO.wav")	
-					sound.play()
-
 				else:
 					print "That solution has already been found,\n"
 					
@@ -368,22 +338,13 @@ class Solver:
 			#running until the user is done.
 			while 1:
 				os.system("clear")
-				if self.valid == True and self.answers.count(self.guess) == 0:
+				if self.answers.count(self.guess) == 0:
 					pygame.mixer.init()
 			
 					sound = pygame.mixer.Sound("ding.wav")	
 					sound.play()
 					print "That is a new solution\n"
 					self.answers.append(self.guess)
-				elif self.valid == False:
-					print ( "THE PROGRAM IS LYING TO YOU. Try another guess.\n"
-						"Maybe make it complex (e.g. of the form a+bj)\n\n Your"
-						" current solutions are:\n\n {0}".format(self.answers) )
-					pygame.mixer.init()
-			
-					sound = pygame.mixer.Sound("NO.wav")	
-					sound.play()
-					
 				else:
 					print "That solution has already been found,\n"
 					
@@ -392,8 +353,8 @@ class Solver:
 				self.original_variables(sys.argv)
 				self.guess = complex(input("Take a guess: "))
 				if self.keyword == True:
-					self.expression_creator()
-					self.special_Newtons_method()
+					special.MethodObject.expression_creator()
+					special.MethodObject.Newtons_method()
 				else:
 					self.iterate()
 					self.Newtons_method()
@@ -401,13 +362,14 @@ class Solver:
 				self.approximate()
 
 
-	#THIS METHOD ISN'T BEING USED RIGHT NOW
 	
 	#If a polynomial has rational coefficients, and (a - sqrt(b)) is a root, 
 	#then (a + sqrt(b)) is a root.
 		
 	#I think there is a better way to do this using the Fraction module and
 	#passing in irrational numbers.
+
+
 	def irrational_root_checker(self):
 		print "IRRATIONAL ROOT CHECKER OUTPUT:\n"
 		getcontext().prec = 30
@@ -417,7 +379,7 @@ class Solver:
 	#FOLLOWING METHODS APPLY.
 	def polynomial_checker(self):
 		print "CHECKER OUTPUT:\n"
-		self.polynomial = False
+		self.polynomial = bool()
 		i = 2
 		b = 0
 		self.argcounter = (len(self.args) - 1) / 2
@@ -429,7 +391,7 @@ class Solver:
 		print "powers is {0}".format(self.powers)
 		#Gives the numbers after the decimal point, if any. In other words,
 		#determines if the number is an integer in the mathematical sense,
-		#Using int() on any float cuts off the decimal portion 
+		#Using int() on any float just cuts off the decimal portion 
 		#of the number.
 		for elements in self.powers:
 			#print "Integer is", int(powers[b])
@@ -444,8 +406,8 @@ class Solver:
 			b += 1
 		self.polynomial = True
 
-	#Tests to see if the complex conjugate theorem (if a + b*j is a root, then a - b*j
-	#is also a root.) can be applied.
+	#Uses the complex conjugate theorem: if a + b*j is a root, then a - b*j
+	#is also a root.
 	def real_coefficent_tester(self):
 		
 		print "REAL_COEFFICIENT_TESTER OUTPUT:\n"
@@ -482,7 +444,7 @@ class Solver:
 			print ("I don't know how many real roots there are, but there are\n"
 			"%d complex roots total.") % self.solutions
 	
-	#THIS METHOD ISN'T BEING USED RIGHT NOW
+
 	def irrational_coefficient_checker(self):
 		print "IRRATIONAL COEFFICIENT OUTPUT:\n"
 		self.irrational = bool()
@@ -508,23 +470,28 @@ class Solver:
 
 #TODO: REFACTOR solution_tester
 
+#TODO: work on importing special methods from special.py
+
 #Work on the irrational number methods
 
 #Object creation is separate because there are variables within __init__ that
 #only need to be reset once, whereas, the variables in original_variables need
-#to be reset many times.
+#to be reset each time.
 solverObject = Solver(sys.argv)
+#solverObject.setter()
 while 1:
 	try:
 		solverObject.original_variables(sys.argv)
 		solverObject.prompter()
-		#All of these lines only get called once (if it doesn't error, otherwise they will get called more than once)
-		#;reprompt handles all the subsequent calls.
-
+		#All of these lines only get called once; reprompt handles all the
+		#subsequent calls.
+		
+		#power_rule_substitution is called every time, because self.keyword
+		#gets reset by original_variables every time.
 		solverObject.power_rule_substitution()
 		if solverObject.keyword == True:
-			solverObject.expression_creator()
-			solverObject.special_Newtons_method()
+			special.MethodObject.expression_creator()
+			special.MethodObject.Newtons_method()
 		else:
 			solverObject.sum_method(solverObject.list_without_power_rule_operation)
 			solverObject.sum_method(solverObject.power_rule_list)
@@ -536,9 +503,8 @@ while 1:
 		#if reprompt hasn't been called yet
 		if solverObject.reprompt_return_value == 1:
 			if solverObject.keyword == False:
-				#If there are no keywords, then self.polynomial may be
-				#reassigned; its set to False by default in
-				#self.power_rule_substitution
+				#If there are no keywords, then the polynomial attribute is
+				#created.
 				solverObject.polynomial_checker()
 				if solverObject.polynomial == True:
 					solverObject.real_coefficent_tester()
