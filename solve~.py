@@ -4,30 +4,24 @@
 
 #division module makes it so division operator doesn't round the  quotient
 from __future__ import division
-from decimal import *
+from special import *
 #Imported for the valuable method float.is_integer
 #import numbers
 #cmath module allows for complex operations and solutions
 import cmath
-import math
 import re
 import sys
-import time
 import pygame
 import os
-import special
-
-
 
 #The imaginary number i = (-1)^0.5 = j in Python.
 #Any number with a j appended to it is treated as a complex number by Python.
-class Solver:
+class Solver(Special):
 
 	def __init__(self, argv):
 		self.reprompt_return_value = 1
 		self.answers = []
 		self.real_coefficients = False
-
 	
 	def original_variables(self, argv):
 		#User input; initial coefficients and powers.
@@ -52,7 +46,6 @@ class Solver:
 		"For example, 3x^2 + tan(3x) -4 would be entered in as:\n"
 		"3*x 2 tan\(3*x\) 1 -4*x 0")
 		self.guess = complex(input("Take a guess: "))
-
 	
 	#power_rule operation is used on coeffcient/power pairs, ex. elements 
 	#at indexes (1,2),(3,4), etc.
@@ -73,8 +66,6 @@ class Solver:
 				self.args[a] = self.args[a].rstrip("*x")
 
 				a += 1
-			print "POWER RULE OUTPUT\n"
-			#print "THE LENGTH OF ARGV IS {0}".format( len(self.args) )
 			x = 1
 			#Initial index value
 			i = 2
@@ -86,14 +77,7 @@ class Solver:
 			
 			while self.argcounter > 0:
 				#Stop appending once argcounter = 0.
-				#if self.argcounter == 0:
-					#break
-				for arg in self.args:
-					#print "p is", complex(self.args[self.i])
-					#print "c is", complex(self.args[self.i-1])
-					#print "x is", x
-					#print "self.args index is %d" % self.i				
-			
+				for arg in self.args:		
 					#The call is odd.
 					if self.power_rule_counter % 2 != 0:
 						#Power rule operation
@@ -102,7 +86,6 @@ class Solver:
 							complex(self.args[i-1]) * self.guess ** 
 							(complex(self.args[i]) - 1 ) )
 						
-						print "o is {0}".format(o)
 						self.power_rule_list.append(o)
 	
 					#The call is even.
@@ -111,13 +94,11 @@ class Solver:
 						y = complex( self.args[i-1] ) * self.guess **( 
 							complex( self.args[i] ) )
 						
-						print "y is {0}".format(y)
 						self.list_without_power_rule_operation.append(y)
 					x += 1
 					#Power elements
 					i = 2*x
 					self.argcounter -= 1
-					#print "argcounter is %d" % self.argcounter
 					#When  the result is computed, break the for loop, go
 					#back to the while loop and append each result into
 					#new_list.
@@ -135,10 +116,8 @@ class Solver:
 				self.power_rule_counter += 1
 		
 		except ValueError as e:
-			print 'The error is "{0}"'.format(e)
 			#If any of the following keywords are found within argv use sympy 
 			#methods.
-			#print len(self.args)
 			for elements in self.special_args:
 				#The 'r' isn't necessary but it is commonly used to denote a
 				#regular expression pattern.
@@ -146,44 +125,30 @@ class Solver:
 					'math.pi', elements):
 						self.keyword = True
 						self.polynomial = False
-						print ( "The keyword \"{0}\" is here."
-							.format(elements) )
-				else:
-					print ( " \"{0}\" is not a keyword.".format(elements) )
-
 
 	#This sums all the elements in self.list_without_power_rule_operation and
 	#sums all the elements in self.substitution_list_sum.
 	def sum_method(self, data_list):
-		print "SUM METHOD OUTPUT:\n"
 		a = 2
 		n = len(data_list) - 1
-		print "LENGTH - 1 IS %d" % n
-		print "POWER RULE LIST", self.power_rule_list
-		print "SUBSTITUTION  LIST", self.list_without_power_rule_operation
 		#Add the first two elements.
 		#complex is used because you could have complex numbers as input and
 		#the elements must be converted from strings.
 		self.sum = complex(data_list[a-1]) + complex(data_list[a])
 		
-		print "the initial sum is", self.sum
 		while a < n:
-			print a
 			a += 1
 			self.sum += complex(data_list[a])
-			#time.sleep(2)
+
 		#self.sum_call_counter is odd
 		if self.sum_call_counter % 2 != 0:
-			print "sum_counter is odd %d" % self.sum_call_counter
 			self.substitution_list_sum = self.sum
 			self.sum_call_counter += 1
 			
 		#self.sum_call_counter is even
 		elif self.sum_call_counter % 2 == 0:
-			print "sum_counter is even %d" % self.sum_call_counter
 			self.power_rule_list_sum = self.sum
 			self.sum_call_counter += 1
-		print "THE FINAL SUM IS {0}\n".format(self.sum)
 
 	#Applys the mathematical process called "Newton's method"
 	#If two zeros are 2 and -2, and the guess is 1, then it will give a solution
@@ -191,7 +156,6 @@ class Solver:
 	#on which zero is closer to the guess. Complex (imaginary)
 	#solutions require complex guesses.
 	def Newtons_method(self):
-		print "NEWTON OUTPUT:\n"
 		n = 0
 		while n <= 1000:
 			self.guess = ( self.guess - 
@@ -206,24 +170,18 @@ class Solver:
 		#Rounding is used to prevent the appendation of answers that have tiny
 		#differences
 		self.guess = complex( round(self.guess.real, 7), round(self.guess.imag, 7) )
-		print "THE FINAL RESULT OF NEWTON'S METHOD IS: {0}\n".format(self.guess)
 
 	#Tests whether or not the result of Newton's Method is an actual solution 
 	#to the equation, based on the user's guess, by seeing how close the 
 	#equation is to zero. If it isn't very close, then the user should try 
 	#another guess.
-	def solution_tester(self):
-		print "SOLUTION TESTER OUTPUT:\n"
-		#print self.keyword
-		
+	def solution_tester(self):		
 		if self.keyword == False:
 			#As long as Newton's method is called 1001 times
 			#self.power_rule_counter will always be 2005.
 			#Add 1 to it so when power_rule_substitution is called
 			#the final self.guess is substituted in.
 			self.power_rule_counter += 1
-			#print "Now the counter is {0}".format(self.power_rule_counter)
-			#Cleaner way of doing this?
 			self.list_without_power_rule_operation = [0]
 			self.power_rule_substitution()
 			self.sum_method(self.list_without_power_rule_operation)
@@ -252,7 +210,6 @@ class Solver:
 			sound = pygame.mixer.Sound("NO.wav")	
 			sound.play()	
 			sys.exit()
-		#time.sleep(5)
 
 	#If both parts of the solution or one part are tiny, then they default to 
 	#zero.
@@ -264,17 +221,11 @@ class Solver:
 			-1e-6 < (self.guess.imag) < 1e-6 ):
 			
 			self.guess = 0
-			print ( "SELF.GUESS WAS APPROXIMATED IT NOW EQUALS {0}"
-			.format(self.guess) )
 		elif -1e-6 < (self.guess.real) < 1e-6:
 			#This type of reassignment prevents TypeErrors.
 			self.guess = complex(0, self.guess.imag)
-			print ( "SELF.GUESS.REAL WAS APPROXIMATED IT IS {0}"
-			.format(self.guess.real) )
 		elif -1e-6 < (self.guess.imag) < 1e-6:
 			self.guess = complex(self.guess.real, 0)
-			print ( "SELF.GUESS.IMAG WAS APPROXIMATED IT IS {0}"
-			.format(self.guess.imag) )
 	
 	def iterate(self):		
 		#Repeat the process.
@@ -285,9 +236,7 @@ class Solver:
 	def reprompt(self):
 		self.reprompt_return_value = 0
 		
-		print "REPROMPT OUTPUT:\n"		
 		if self.polynomial == True:
-			
 			while self.solutions > 0:
 				os.system("clear")
 				if self.answers.count(self.guess) == 0:
@@ -353,32 +302,17 @@ class Solver:
 				self.original_variables(sys.argv)
 				self.guess = complex(input("Take a guess: "))
 				if self.keyword == True:
-					special.MethodObject.expression_creator()
-					special.MethodObject.Newtons_method()
+					self.expression_creator()
+					self.special_Newtons_method()
 				else:
 					self.iterate()
 					self.Newtons_method()
 				self.solution_tester()
 				self.approximate()
-
-
 	
-	#If a polynomial has rational coefficients, and (a - sqrt(b)) is a root, 
-	#then (a + sqrt(b)) is a root.
-		
-	#I think there is a better way to do this using the Fraction module and
-	#passing in irrational numbers.
-
-
-	def irrational_root_checker(self):
-		print "IRRATIONAL ROOT CHECKER OUTPUT:\n"
-		getcontext().prec = 30
-		print "self.guess squared is",(self.guess)**2
-		
 	#If the input entered doesn't correspond to a polynomial, then NONE OF THE
 	#FOLLOWING METHODS APPLY.
 	def polynomial_checker(self):
-		print "CHECKER OUTPUT:\n"
 		self.polynomial = bool()
 		i = 2
 		b = 0
@@ -388,84 +322,40 @@ class Solver:
 			self.powers.append(float(self.args[i]))
 			i += 2
 			self.argcounter -= 1
-		print "powers is {0}".format(self.powers)
 		#Gives the numbers after the decimal point, if any. In other words,
 		#determines if the number is an integer in the mathematical sense,
 		#Using int() on any float just cuts off the decimal portion 
 		#of the number.
 		for elements in self.powers:
-			#print "Integer is", int(powers[b])
 			a = self.powers[b] - int(self.powers[b])
-			print "a is {0}".format(a)
 			#The key piece of logic.
 			if (self.powers[b] < 0 or a != 0.0 or type(self.powers[b])
 			== complex):
-				
-				print "This is not a polynomial"
+
 				return
 			b += 1
 		self.polynomial = True
 
 	#Uses the complex conjugate theorem: if a + b*j is a root, then a - b*j
 	#is also a root.
-	def real_coefficent_tester(self):
-		
-		print "REAL_COEFFICIENT_TESTER OUTPUT:\n"
+	def real_coefficent_tester(self):		
 		#If this returns, then a condition in number_of_roots doesn't apply.
 		i = 1
 		m = 0
 		self.argcounter = (len(self.args) - 1 )/2
 		while self.argcounter > 0:
-			print "The coefficients are:{0} \n".format(self.args[i])
 			if complex(self.args[i]).imag != 0:
-				print "Not all coeffcients are real\n"
 				return
 			self.argcounter -= 1
 			m += 1
 			i = 2*m + 1
-		print "All coeffcients are real."
 		self.real_coefficients = True
 
-	def number_of_roots(self):
-		print "ROOT_NUMBER OUTPUT:\n"
-		
+	#Uses the Fundamental Theorem of Algebra to tell the user how many
+	#roots there are.
+	def number_of_roots(self):		
 		if self.reprompt_return_value ==  1 and self.keyword == False:			
 			self.solutions = max(self.powers)
-		#Uses the Fundamental Theorem of Algebra to tell the user how many
-		#roots there are.
-		
-		#If the leading power of a polynomial is odd and it has real 
-		#coefficients, then it has at least one real root.
-		
-		if self.real_coefficients == True and self.solutions % 2 != 0:
-			print ("There are %d complex roots total, and at least 1 of them is"
-			" real." % self.solutions)
-		else:
-			print ("I don't know how many real roots there are, but there are\n"
-			"%d complex roots total.") % self.solutions
-	
-
-	def irrational_coefficient_checker(self):
-		print "IRRATIONAL COEFFICIENT OUTPUT:\n"
-		self.irrational = bool()
-		x = 0
-		i = 1
-		#if it makes it through the for loop, then no coefficients are irrational
-		for coefficient in self.args:
-			self.args[i] = complex(self.args[i])
-			print self.args[i]
-			if ( float.is_integer(self.args[i].real) == False 
-				or float.is_integer(self.args[i].imag) == False ):
-				print "I errored"
-				self.irrational = True
-				return
-			else:
-				print "I didn't error"
-				x  += 1
-				i = 2*x + 1
-				if i > len(self.args) -2:
-					break	
-		print "All coeffiecients are rational"
 
 
 #TODO: REFACTOR solution_tester
@@ -478,7 +368,6 @@ class Solver:
 #only need to be reset once, whereas, the variables in original_variables need
 #to be reset each time.
 solverObject = Solver(sys.argv)
-#solverObject.setter()
 while 1:
 	try:
 		solverObject.original_variables(sys.argv)
@@ -490,8 +379,8 @@ while 1:
 		#gets reset by original_variables every time.
 		solverObject.power_rule_substitution()
 		if solverObject.keyword == True:
-			special.MethodObject.expression_creator()
-			special.MethodObject.Newtons_method()
+			solverObject.expression_creator()
+			solverObject.special_Newtons_method()
 		else:
 			solverObject.sum_method(solverObject.list_without_power_rule_operation)
 			solverObject.sum_method(solverObject.power_rule_list)
@@ -525,5 +414,3 @@ while 1:
 			.format(solverObject.answers) )
 	
 		sys.exit()
-
-#Useless code, right now:

@@ -1,11 +1,8 @@
 from sympy import *
 
-
-class Methods:
+class Special:
 	#Creates sympy object.
 	def expression_creator(self):
-		print self
-		self.x = symbols('x')
 		x = 1
 		argcounter = ( (len(self.special_args)) - 1 )/ 2
 		self.expression_string = ""
@@ -30,7 +27,8 @@ class Methods:
 	
 	#Finds the derivative of the expression, and performs Newtons method on the
 	#expression 1001 times.
-	def Newtons_method(self):
+	def special_Newtons_method(self):
+		self.x = symbols('x')
 		derivative = diff(self.expr, self.x)
 		n = 1
 		while n <= 1000:
@@ -40,10 +38,5 @@ class Methods:
 	
 				( derivative.subs(self.x, self.guess) ) )
 			n += 1
-		#N is a rounding function in sympy
-		#self.guess = round(self.guess, 6)
 		print "The final result of the SPECIAL Newton\'s method is", self.guess
 		self.guess = round(self.guess, 7)
-
-
-MethodObject = Methods()

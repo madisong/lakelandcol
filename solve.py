@@ -5,12 +5,12 @@
 #division module makes it so division operator doesn't round the  quotient
 from __future__ import division
 from decimal import *
+from special import *
 #Imported for the valuable method float.is_integer
 #import numbers
 #cmath module allows for complex operations and solutions
 import cmath
 import math
-from sympy import *
 import re
 import sys
 import time
@@ -21,7 +21,7 @@ import os
 
 #The imaginary number i = (-1)^0.5 = j in Python.
 #Any number with a j appended to it is treated as a complex number by Python.
-class Solver:
+class Solver(Special):
 
 	def __init__(self, argv):
 		self.reprompt_return_value = 1
@@ -141,43 +141,6 @@ class Solver:
 							.format(elements) )
 				else:
 					print ( " \"{0}\" is not a keyword.".format(elements) )
-	#Creates sympy object.
-	def expression_creator(self):
-		self.x = symbols('x')
-		x = 1
-		argcounter = ( (len(self.special_args)) - 1 )/ 2
-		self.expression_string = ""
-		while argcounter > 0:
-			i = 2*x
-			x += 1
-			#Creates the first part of a string using sympy syntax.
-			term = ( "{0}**{1}+"
-				.format(self.special_args[i-1], self.special_args[i]) )
-	
-			#Continuosly add terms to the string.
-			self.expression_string += term
-			#print self.expression_string
-			argcounter -= 1
-			#print argcounter
-
-		#Strip the "+" on the end of the string.
-		self.expression_string = self.expression_string.rstrip("+")
-		print self.expression_string
-		self.expr = sympify(self.expression_string)
-		
-	#Finds the derivative of the expression, and performs Newtons method on the
-	#expression 1001 times.
-	def special_Newtons_method(self):
-		derivative = diff(self.expr, self.x)
-		n = 1
-		while n <= 1000:
-			#"subs" substitutes in the self.guess for the deifned symbol x.
-			self.guess -= ( self.expr.subs(self.x, self.guess) /
-
-				( derivative.subs(self.x, self.guess) ) )
-			n += 1
-		print "The final result of the SPECIAL Newton\'s method is", self.guess
-		self.guess = round(self.guess, 7)
 
 
 	#This sums all the elements in self.list_without_power_rule_operation and
@@ -473,16 +436,6 @@ class Solver:
 			self.solutions = max(self.powers)
 		#Uses the Fundamental Theorem of Algebra to tell the user how many
 		#roots there are.
-		
-		#If the leading power of a polynomial is odd and it has real 
-		#coefficients, then it has at least one real root.
-		
-		if self.real_coefficients == True and self.solutions % 2 != 0:
-			print ("There are %d complex roots total, and at least 1 of them is"
-			" real." % self.solutions)
-		else:
-			print ("I don't know how many real roots there are, but there are\n"
-			"%d complex roots total.") % self.solutions
 	
 	#THIS METHOD ISN'T BEING USED RIGHT NOW
 	def irrational_coefficient_checker(self):
