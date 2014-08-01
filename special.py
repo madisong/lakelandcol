@@ -1,4 +1,5 @@
 from sympy import *
+import time
 
 class Special:
 	#Creates sympy object.
@@ -22,7 +23,7 @@ class Special:
 		#Strip the "+" on the end of the string.
 		self.expression_string = self.expression_string.rstrip("+")
 		print self.expression_string
-		#time.sleep(10)
+		time.sleep(10)
 		self.expr = sympify(self.expression_string)
 	
 	#Finds the derivative of the expression, and performs Newtons method on the

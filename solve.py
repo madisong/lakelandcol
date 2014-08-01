@@ -412,7 +412,6 @@ class Solver(Special):
 	#Tests to see if the complex conjugate theorem (if a + b*j is a root,
 	#then a - b*j is also a root.) can be applied.
 	def real_coefficent_tester(self):
-		
 		print "REAL_COEFFICIENT_TESTER OUTPUT:\n"
 		#If this returns, then a condition in number_of_roots doesn't apply.
 		i = 1
@@ -429,13 +428,13 @@ class Solver(Special):
 		print "All coeffcients are real."
 		self.real_coefficients = True
 
+	#Uses the Fundamental Theorem of Algebra to tell the user how many
+	#roots there are.
 	def number_of_roots(self):
 		print "ROOT_NUMBER OUTPUT:\n"
 		
 		if self.reprompt_return_value ==  1 and self.keyword == False:			
 			self.solutions = max(self.powers)
-		#Uses the Fundamental Theorem of Algebra to tell the user how many
-		#roots there are.
 	
 	#THIS METHOD ISN'T BEING USED RIGHT NOW
 	def irrational_coefficient_checker(self):
@@ -450,6 +449,7 @@ class Solver(Special):
 			if ( float.is_integer(self.args[i].real) == False 
 				or float.is_integer(self.args[i].imag) == False ):
 				print "I errored"
+				time.sleep(5)
 				self.irrational = True
 				return
 			else:
@@ -457,11 +457,12 @@ class Solver(Special):
 				x  += 1
 				i = 2*x + 1
 				if i > len(self.args) -2:
-					break	
+					break
 		print "All coeffiecients are rational"
+		time.sleep(5)
 
 
-#TODO: REFACTOR solution_tester
+#TODO: Bring in refactored solution_tester from SOLVE~.PY
 
 #Work on the irrational number methods
 
@@ -497,6 +498,7 @@ while 1:
 				#self.power_rule_substitution
 				solverObject.polynomial_checker()
 				if solverObject.polynomial == True:
+					solverObject.irrational_coefficient_checker
 					solverObject.real_coefficent_tester()
 					solverObject.number_of_roots()
 		solverObject.reprompt()
@@ -515,5 +517,3 @@ while 1:
 			.format(solverObject.answers) )
 	
 		sys.exit()
-
-#Useless code, right now:

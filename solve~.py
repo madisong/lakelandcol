@@ -1,10 +1,13 @@
 #Written By Collin Lakeland.
+#Sound Effects By Kanon Cole
 
 #This is a program to solve any equation using Newton's Method.
 
 #division module makes it so division operator doesn't round the  quotient
 from __future__ import division
 from special import *
+from fractions import *
+from decimal import *
 #Imported for the valuable method float.is_integer
 #import numbers
 #cmath module allows for complex operations and solutions
@@ -19,9 +22,7 @@ import os
 class Solver(Special):
 
 	def __init__(self, argv):
-		self.reprompt_return_value = 1
 		self.answers = []
-		self.real_coefficients = False
 	
 	def original_variables(self, argv):
 		#User input; initial coefficients and powers.
@@ -41,15 +42,16 @@ class Solver(Special):
 		"If you think a root is zero, then guess close to\n"
 		"zero, but not actually zero.\n\n" 
 		"Enter the coefficients and corresponding powers of your equation.\n"
-		"Make sure each equation has \"*x\" attached to it\n"
+		"Make sure each term has \"*x\" attached to it\n"
 		"if it doesn\'t already.\nA backslash should preceed any parentheses.\n\n"
 		"For example, 3x^2 + tan(3x) -4 would be entered in as:\n"
-		"3*x 2 tan\(3*x\) 1 -4*x 0")
+		"3*x 2 tan\(3*x\)*x 1 -4*x 0")
 		self.guess = complex(input("Take a guess: "))
 	
 	#power_rule operation is used on coeffcient/power pairs, ex. elements 
 	#at indexes (1,2),(3,4), etc.
 	def power_rule_substitution(self):
+		print "POWER:"
 		try:
 			#self.special_args is a duplicate of self.args, but the coefficients
 			#don't have the "*x" stripped, so that sympy can work with that data
@@ -60,7 +62,6 @@ class Solver(Special):
 			#Results of power_rule
 			o = complex()
 			a = 0
-			b = 0
 			while a <= (len(self.args) - 1):
 				self.special_args.append(self.args[a])
 				self.args[a] = self.args[a].rstrip("*x")
@@ -74,7 +75,6 @@ class Solver(Special):
 			self.argcounter = (len(self.args) - 1) / 2
 			
 			#For results of power_rule. 0 is a placeholder in this list
-			
 			while self.argcounter > 0:
 				#Stop appending once argcounter = 0.
 				for arg in self.args:		
@@ -102,14 +102,13 @@ class Solver(Special):
 					#When  the result is computed, break the for loop, go
 					#back to the while loop and append each result into
 					#new_list.
-					self.keyword = False
 					break
 			
 			#This is supposed to prevent an infinite loop from occuring, while
 			#allowing self.power_rule_substitution to be called a second time.
 			if self.power_rule_counter % 2 != 0:
+
 				#Do not change the order.
-				
 				self.power_rule_counter += 1
 				self.power_rule_substitution()
 			else:
@@ -124,11 +123,11 @@ class Solver(Special):
 				if re.search( r'sin|cos|tan|sec|csc|cot|ln|log|sqrt|math.e|'
 					'math.pi', elements):
 						self.keyword = True
-						self.polynomial = False
 
 	#This sums all the elements in self.list_without_power_rule_operation and
 	#sums all the elements in self.substitution_list_sum.
 	def sum_method(self, data_list):
+		print "SUM:"
 		a = 2
 		n = len(data_list) - 1
 		#Add the first two elements.
@@ -156,6 +155,7 @@ class Solver(Special):
 	#on which zero is closer to the guess. Complex (imaginary)
 	#solutions require complex guesses.
 	def Newtons_method(self):
+		print "NEWTON:"
 		n = 0
 		while n <= 1000:
 			self.guess = ( self.guess - 
@@ -175,41 +175,76 @@ class Solver(Special):
 	#to the equation, based on the user's guess, by seeing how close the 
 	#equation is to zero. If it isn't very close, then the user should try 
 	#another guess.
-	def solution_tester(self):		
-		if self.keyword == False:
-			#As long as Newton's method is called 1001 times
-			#self.power_rule_counter will always be 2005.
-			#Add 1 to it so when power_rule_substitution is called
-			#the final self.guess is substituted in.
-			self.power_rule_counter += 1
-			self.list_without_power_rule_operation = [0]
-			self.power_rule_substitution()
-			self.sum_method(self.list_without_power_rule_operation)
-			
+	def solution_tester(self):
+		print "TESTER"
+		n = 0
+		while n < 2:
+			#First, test if the original self.guess is a solution, then,
+			#if the coefficients are rational, test to see if the cojugate is a
+			#solution.
+			time.sleep(3)
+			#BEFORE THE REASSIGNMENT, SO THE ORIGINAL ANSWER
+			print "guess", self.guess
+			print "counter", self.power_rule_counter
+			print "N IS",n
+			if n == 1:
+				if hasattr(self,"irrational_coefficient") == False:
+					self.guess = -self.guess
+				#self.guess = conjugate(self.guess)
 			#If both the real and imaginary parts of the sum are between a very
 			#small negative number and a very small positive number.
 			#e(number), in this case, is equivalent to 10**number.
-			if ( ( -1e-6 < self.sum.real < 1e-6 ) and
-			
-				( -1e-6 < self.sum.imag < 1e-6 ) ):
-			
-				print "VALID SOLUTION"
-
-		#if there are keywords
-		elif (-1e-6 < self.expr.subs(self.x, self.guess) < 1e-6 ):
-			print self.expr.subs(self.x,self.guess)
-			print "VALID SOLUTION"
-			time.sleep(5)
-
-		else:
-			print ( "THE PROGRAM IS LYING TO YOU. Try another guess.\n"
-			"Maybe make it complex (e.g. of the form a+bj)\n\n Your "
-			"current solutions are:\n\n {0}".format(self.answers) )
-			pygame.mixer.init()
+			if hasattr(self, "sum") == True:
+				#As long as Newton's method is called 1001 times
+				#self.power_rule_counter will always be 2005.
+				#Add 1 to it so when power_rule_substitution is called
+				#the final self.guess is substituted in.
+				if n != 1:
+					self.power_rule_counter += 1
+				else:
+					self.power_rule_counter += 2
+				self.list_without_power_rule_operation = [0]
+				self.power_rule_substitution()
+				self.sum_method(self.list_without_power_rule_operation)
 	
-			sound = pygame.mixer.Sound("NO.wav")	
-			sound.play()	
-			sys.exit()
+				if ( ( -1e-6 < self.sum.real < 1e-6 ) and
+	
+					( -1e-6 < self.sum.imag < 1e-6 ) ):
+					print "VALID SOLUTION"
+
+					if n == 1:
+						print "YESSSSSS", self.guess,  'THE NEGATIVE'
+						self.negative_solution = True
+						time.sleep(3)
+		
+					else:
+						print "NOOOO"
+						#THIS SHOULD BE WHAT I ORIGINALLY GOT, BUT IT ISN'T
+						print "SELF.GUESS", -self.guess, "THE ORIGINAL"
+						time.sleep(3)
+			
+			#if there are keywords
+			elif ( hasattr(self, "sum") == False and
+				(-1e-6 < self.expr.subs(self.x, self.guess) < 1e-6) ):
+	
+				print self.expr.subs(self.x,self.guess)
+				print "VALID SOLUTION"
+	
+			else:
+				print ( "THE PROGRAM IS LYING TO YOU. Try another guess.\n"
+				"Maybe make it complex (e.g. of the form a+bj)\n\n Your "
+				"current solutions are:\n\n {0}".format(self.answers) )
+				pygame.mixer.init()
+		
+				sound = pygame.mixer.Sound("NO.wav")	
+				sound.play()
+				sys.exit()
+			print "END TESTER"
+			time.sleep
+			n += 1
+			print n
+
+
 
 	#If both parts of the solution or one part are tiny, then they default to 
 	#zero.
@@ -234,9 +269,10 @@ class Solver(Special):
 		self.sum_method(self.power_rule_list)
 
 	def reprompt(self):
-		self.reprompt_return_value = 0
-		
-		if self.polynomial == True:
+		print "reprompt:"
+		self.reprompt_value = 0
+		#if self.polynomial exists, self.polynomial will = True
+		if hasattr(self, "polynomial") == True:
 			while self.solutions > 0:
 				os.system("clear")
 				if self.answers.count(self.guess) == 0:
@@ -245,16 +281,22 @@ class Solver(Special):
 					sound = pygame.mixer.Sound("ding.wav")	
 					sound.play()
 					print "That is a new solution"
-					self.answers.append(self.guess)
+					self.answers.append(-self.guess)
 					self.solutions -= 1
-						
-					if ( self.real_coefficients == True and 
-						self.guess.conjugate() != self.guess ):
+
+					if hasattr(self, "negative_solution") == True:
+						self.answers.append(self.guess)
+						self.solutions -= 1
+						print "I WORKED"
+						time.sleep(3)
+
+					if ( hasattr(self, "real_coefficients") == True and 
+						-self.guess.conjugate() != -self.guess ):
 						
 						print "The conjugate is also a new solution."
-						self.answers.append( self.guess.conjugate())
-	
+						self.answers.append( -self.guess.conjugate() )
 						self.solutions -= 1
+					
 					else:
 						print "The conjugate is not unique."
 				else:
@@ -301,7 +343,7 @@ class Solver(Special):
 
 				self.original_variables(sys.argv)
 				self.guess = complex(input("Take a guess: "))
-				if self.keyword == True:
+				if hasattr(self, "keyword") == True:
 					self.expression_creator()
 					self.special_Newtons_method()
 				else:
@@ -313,7 +355,6 @@ class Solver(Special):
 	#If the input entered doesn't correspond to a polynomial, then NONE OF THE
 	#FOLLOWING METHODS APPLY.
 	def polynomial_checker(self):
-		self.polynomial = bool()
 		i = 2
 		b = 0
 		self.argcounter = (len(self.args) - 1) / 2
@@ -354,15 +395,52 @@ class Solver(Special):
 	#Uses the Fundamental Theorem of Algebra to tell the user how many
 	#roots there are.
 	def number_of_roots(self):		
-		if self.reprompt_return_value ==  1 and self.keyword == False:			
+		if ( hasattr(self, "reprompt_value") ==  False and
+			hasattr(self, "keyword") == False ):
 			self.solutions = max(self.powers)
 
+	def irrational_coefficient_checker(self):
+		print "IRRATIONAL COEFFICIENT OUTPUT:\n"
+		args = []
+		x = 0
+		i = 1
+		#if it makes it through the for loop, then no coefficients are irrational
+		while i <= len(self.args) - 2:
+			#if 0 wasn't appended, then the first iteration would fail, because
+			#args[1] doesn't exist.
+			#print args
+			#time.sleep(5)
 
-#TODO: REFACTOR solution_tester
+			args.extend( [0, complex(self.args[i])] )
+			if ( float.is_integer(args[i].real) == False 
+				or float.is_integer(args[i].imag) == False ):
+				print "I errored"
+				self.irrational_coefficient = True
+				return
+			else:
+				x  += 1
+				i = 2*x + 1
+		print "All coeffiecients are rational"
 
-#TODO: work on importing special methods from special.py
+	
+	#If a polynomial has rational coefficients, and (a - sqrt(b)) is a root, 
+	#then (a + sqrt(b)) is a root.
 
-#Work on the irrational number methods
+		#REARRANGED TESTER AND CHECKER METHOD CALLS, PLACING THEM RIGHT AFTER
+		#POWER_RULE CALL, SO THE IRRATIONAL_COFFICIENT ATTRIBUTE MAY EXIST
+		#WHEN CHECKED IN SOLUTION_TESTER
+
+		#MAKE THE DISTINCTION BEWTWEEN -SELF.GUESS AND SELF.GUESS IN THE
+		#ASSIGNMENT SELF.GUESS = -SELF.GUESS. MAKE THEM EASIER TO REFER TO
+		#SOMEHOW
+
+		#TEST FOR IRRATIONAL COEFFCIENTS, THEN TEST NEGATIVE OF SOLUTION; WILL
+		#WORK WHEN a = 0 in a - sqrt(b)
+		#DIFFICULT TO GET IT TO WORK WHEN  a DOESN'T EQUAL 0, BECAUSE PYTHON
+		#DOES EVERYTHING IN DECIMALS BY DEFUALT, AND APPROXIMATES IRRATIONAL
+		#NUMBERS WITH ERRONEOUS FRACTIONS
+
+
 
 #Object creation is separate because there are variables within __init__ that
 #only need to be reset once, whereas, the variables in original_variables need
@@ -375,10 +453,19 @@ while 1:
 		#All of these lines only get called once; reprompt handles all the
 		#subsequent calls.
 		
-		#power_rule_substitution is called every time, because self.keyword
-		#gets reset by original_variables every time.
 		solverObject.power_rule_substitution()
-		if solverObject.keyword == True:
+		if hasattr(solverObject, "reprompt_value") == False:
+			if hasattr(solverObject, "keyword") == False:
+				#If there are no keywords, then the polynomial attribute is
+				#created.
+				solverObject.polynomial_checker()
+				if hasattr(solverObject, "polynomial") == True:
+					solverObject.irrational_coefficient_checker()
+					#solverObject.irrational_root_checker
+					solverObject.real_coefficent_tester()
+					solverObject.number_of_roots()
+
+		if hasattr(solverObject, "keyword") == True:
 			solverObject.expression_creator()
 			solverObject.special_Newtons_method()
 		else:
@@ -390,14 +477,16 @@ while 1:
 		solverObject.approximate()
 		
 		#if reprompt hasn't been called yet
-		if solverObject.reprompt_return_value == 1:
-			if solverObject.keyword == False:
-				#If there are no keywords, then the polynomial attribute is
-				#created.
-				solverObject.polynomial_checker()
-				if solverObject.polynomial == True:
-					solverObject.real_coefficent_tester()
-					solverObject.number_of_roots()
+		#if hasattr(solverObject, "reprompt_value") == False:
+			#if hasattr(solverObject, "keyword") == False:
+				##If there are no keywords, then the polynomial attribute is
+				##created.
+				#solverObject.polynomial_checker()
+				#if hasattr(solverObject, "polynomial") == True:
+					#solverObject.irrational_coefficient_checker()
+					##solverObject.irrational_root_checker
+					#solverObject.real_coefficent_tester()
+					#solverObject.number_of_roots()
 		solverObject.reprompt()
 		
 	except ZeroDivisionError:
