@@ -1,0 +1,53 @@
+======
+Sec 4.
+======
+"You may convey verbatim copies of the Program's source code as you receive it,
+in any medium, provided that you conspicuously and appropriately publish on each
+ copy an appropriate copyright notice; keep intact all notices stating that this
+ License and any non-permissive terms added in accord with section 7 apply to
+ the code"
+
+ Same applies to modified works.
+
+ This section says people may distribute covered works as long as they
+ keep intact all license notices and any addtional terms that
+ meet the requirements of section 7
+
+ But section 7 says they can remove the addtional terms, if they so wish
+
+ INCONSISTENCY
+ 
+DOES SEC 7. NEGATE THIS REQUIREMENT TO KEEP ADDITIONAL TEMRS INTACT, BECAUSE IT
+COMES AFTERWARD?
+
+======
+Sec 7.
+======
+This is allowed:
+
+"Requiring preservation of specified reasonable legal notices or author
+attributions in that material or in the Appropriate Legal Notices displayed by
+works containing it"
+
+Yet:
+
+"When you convey a copy of a covered work, you may at your option remove any
+additional permissions from that copy, or from any part of it. (Additional
+permissions may be written to require their own removal in certain cases when
+you modify the work.)"
+
+"Covered" meaning modified or unmodified.
+
+HOW TO PREVENT THIS?
+Can an additional, non-remvable, term be added that states that the statement
+that I created this program, or that this work is based off of my program be
+added?
+
+=======
+Sec 11.
+=======
+Cant sue for patent violation.
+
+i.e. if it says in the source: "this code
+was written by me", and someone removes and
+replaces it with their name, I cannot sue them
